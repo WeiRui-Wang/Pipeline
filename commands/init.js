@@ -3,6 +3,7 @@ const path = require('path');
 const exec = require('child_process').exec;
 const fs = require('fs')
 const envfile = require('envfile')
+const envFilePath = path.join(path.dirname(require.main.filename), '.env');
 
 
 exports.command = 'init';
@@ -18,9 +19,9 @@ exports.handler = async argv => {
     console.log(chalk.green("Preparing computing environment..."));
     exec('sh commands/init.sh', (error, stdout) => {
         console.log(stdout);
-        let env = envfile.parseFileSync(path.join(path.dirname(require.main.filename), '.env'));
+        let env = envfile.parseFileSync(envFilePath);
         env.CONNECTION_INFORMATION = stdout.replace(/[\n]$/, '');
-        fs.writeFileSync(path.join(path.dirname(require.main.filename), '.env'), envfile.stringifySync(env));
+        fs.writeFileSync(envFilePath, envfile.stringifySync(env));
     });
 
 };
