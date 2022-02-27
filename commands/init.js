@@ -19,12 +19,12 @@ exports.builder = yargs => {
 
 exports.handler = async argv => {
     const { processor } = argv;
-    console.log(path)
-    exec('chmod +x commands/run.sh',(error, stdout, stderr) => {
-
-        console.log(error || stderr);
-        console.log(stdout);
-    });
+    // console.log(path)
+    // exec('chmod +x commands/run.sh',(error, stdout, stderr) => {
+    //
+    //     console.log(error || stderr);
+    //     console.log(stdout);
+    // });
     exec('sh commands/run.sh',(error, stdout, stderr) => {
 
         console.log(error || stderr);
