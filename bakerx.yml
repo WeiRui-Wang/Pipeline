@@ -1,0 +1,6 @@
+name: M1
+image: focal
+up: |                  
+  sudo add-apt-repository ppa:ansible/ansible -y
+  sudo apt-get update -y
+  sudo apt-get install ansible -y
