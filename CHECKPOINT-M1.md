@@ -25,7 +25,7 @@ For detailed info, please refer to [project insigts](https://github.ncsu.edu/CSC
 ## Issues Faced
 - How to execute bakerx commands within `init.js`
 - How to save connection information after output into .env file
-- How to automate provision and cinfiguration using native bakerx.yml support.
+- How to automate provision and configuration using native bakerx.yml support.
 
 For detailed info, please refer to closed and open [issues](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/issues).
 
@@ -37,4 +37,4 @@ For detailed info, please refer to closed and open [issues](https://github.ncsu.
 
 ## GitHub Project - Kanban Board
 
-![Kanban Board](assets/kanbanBoard.PNG)
+![Kanban Board](assets/kanban_board.JPG)

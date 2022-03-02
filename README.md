@@ -1,7 +1,7 @@
 # Project M1 - Pipelines
 
 ## Project Overview
-Provision and run tasks inside a computing environment from a host machine by using designing a pipeline. 
+Provision and run tasks inside a computing environment from a host machine by designing a pipeline. 
 
 ## Project Evaluation
 |Project Task | Points |
@@ -14,10 +14,13 @@ Provision and run tasks inside a computing environment from a host machine by us
 
 ## Deliverables
 
-### Env. Setup
-TODO
-- Describe settings needed in env file
-- Provide sample image
+### Env. File Set Up
+Purpose: Pass environment settings to the pipeline via  a `.env` file. 
+
+Set Up: Store and load the following variables
+
+![env_sample]()
+
 
 ### Screencast
 [Project M1 - Screencast]()
@@ -27,16 +30,12 @@ TODO
 - update README with screencast link (ensure it is accessible)
 
 ### Reports
-[Checkpoint-M1 Report]()
+[Checkpoint-M1 Report](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/blob/main/CHECKPOINT-M1.md)
 
-Milestone Report:
-
-TODO
-- update links to Checkpoint-M1 Report
-- Generate information for Milestone Report: 
+Milestone Report: TODO
 
 
-### Commands
+### Available Commands
 ```
 npm install
 ```
