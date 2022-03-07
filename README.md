@@ -3,18 +3,7 @@
 ## Project Overview
 Provision and run tasks inside a computing environment from a host machine by designing a pipeline. 
 
-## Project Evaluation
-|Project Task | Points |
-|----|----|
-|Automatically provision and configure a build server |20%|
-|Create a build job specification |20%|
-|Automatically configure a build environment for given build job specification |30%|
-|Checkpoint and milestone report |20%|
-|Screencast |10%|
-
-## Deliverables
-
-### YAML Build Job Specification Format
+## YAML Build Job Specification Format
 + Our parser for YAML build job specification supports the formatting as shown below. Majorly, `jobs`, which consists of list of jobs will be run after `setup`, which consists a list of enviroment setup commands and packages to be installed before the job execution.
 + Each `jobs` must have `name` and `steps`, and `steps` can consists a list of steps that has `name` and `run` for each step within `steps` list.
 + Each entry from `setup` must be following same level of indentation as shown below, and fall within 4 major general format.
@@ -38,6 +27,18 @@ jobs:
       - name: iTrust2 mvn build
         run: cd iTrust2 && mvn --batch-mode --update-snapshots clean test
 ```
+
+
+## Project Evaluation
+|Project Task | Points |
+|----|----|
+|Automatically provision and configure a build server |20%|
+|Create a build job specification |20%|
+|Automatically configure a build environment for given build job specification |30%|
+|Checkpoint and milestone report |20%|
+|Screencast |10%|
+
+## Deliverables
 
 ### Env. File Set Up
 Purpose: Pass environment settings to the pipeline via  a `.env` file. 
