@@ -35,7 +35,7 @@ jobs:
 Purpose: Pass sensitive setup information to the pipeline via  a `.env` file. 
 
 Set Up: 
-1. Create a .env file accessible to the repo based on `.env.template`
+1. Create a .env file accessible to the repo based on [`.env.template`](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/blob/main/.env.template)
 2. Generate and update with a personal [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) 
 
 3. Information automatially stored:
