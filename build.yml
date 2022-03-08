@@ -2,6 +2,7 @@ setup:
   - apt:
       - npm
       - wget
+      - maven
       - nodejs
       - mysql-server
       - openjdk-11-jdk
