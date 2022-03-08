@@ -29,23 +29,26 @@ jobs:
 ```
 
 
-## Project Evaluation
-|Project Task | Points |
-|----|----|
-|Automatically provision and configure a build server |20%|
-|Create a build job specification |20%|
-|Automatically configure a build environment for given build job specification |30%|
-|Checkpoint and milestone report |20%|
-|Screencast |10%|
-
 ## Deliverables
 
 ### Env. File Set Up
-Purpose: Pass environment settings to the pipeline via  a `.env` file. 
+Purpose: Pass sensitive setup information to the pipeline via  a `.env` file. 
 
-Set Up: Store and load the following variables
+Set Up: 
+1. Create a .env file accessible to the repo.
+2. Generate/add a personal [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) such as 
 
-![env_sample]()
+``
+token=ExampleGeneratedToken
+``
+
+3. Information automatially stored:
+- VM Connection Information
+
+Error: "You should have a .env containing project specific environment variables"
+
+Solution: Create .env file
+
 
 
 ### Screencast
@@ -73,6 +76,15 @@ node index.js init
 ```
 node build itrust-build build.yml
 ```
+
+## Project Evaluation
+|Project Task | Points |
+|----|----|
+|Automatically provision and configure a build server |20%|
+|Create a build job specification |20%|
+|Automatically configure a build environment for given build job specification |30%|
+|Checkpoint and milestone report |20%|
+|Screencast |10%|
 
 ## Team Members
 - Jessica Vargas (jrvargas)
