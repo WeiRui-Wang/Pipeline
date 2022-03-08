@@ -1,8 +1,12 @@
 setup:
-  - { package: mysql, version: 8.0, param: $ENV_VAR_PRMTS }
-  - apt-get install mysql -y
-  - java11, nodejs, wget
-  - URL=https://github.ncsu.edu/engr-csc326-staff/iTrust2-v10
+  - apt:
+      - npm
+      - wget
+      - nodejs
+      - mysql-server
+      - openjdk-11-jdk
+  - url:
+      - https://github.ncsu.edu/engr-csc326-staff/iTrust2-v10
 
 jobs:
   - name: build-itrust
