@@ -3,6 +3,4 @@ image: focal
 ip: 192.168.56.10
 sync: true
 up: |
-  sudo add-apt-repository ppa:ansible/ansible -y
-  sudo apt-get update -y
-  sudo apt-get install ansible -y
+  sudo apt update -qq

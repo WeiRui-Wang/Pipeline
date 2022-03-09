@@ -15,9 +15,7 @@ exports.builder = yargs => {
 
 exports.handler = async argv => {
     const {processor} = argv;
-
     console.log(chalk.green("Preparing computing environment..."));
-    // console.log(envFilePath);
     await exec('sh commands/init.sh', (error, stdout) => {
         console.log(stdout);
         let env = envfile.parseFileSync(envFilePath);
