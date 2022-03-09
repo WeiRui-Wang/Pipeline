@@ -1,15 +1,51 @@
 setup:
-  - apt:
-      - npm
-      - wget
-      - maven
-      - nodejs
-      - mysql-server
-      - openjdk-11-jdk
-  - url:
-      - https://github.ncsu.edu/engr-csc326-staff/iTrust2-v10
+  # - {package: mysql, version: 8.0, param: $ENV_VAR_PRMTS}
+  # - CMD: apt-get install mysql -y
+  - APT: 
+    - openjdk-11-jdk
+    - wget
+    - npm
+    - maven
+    - mysql-client-core-8.0
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+  # - URL: 
+  #   - https://github.ncsu.edu/engr-csc326-staff/iTrust2-v10
+  # - CMD: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  # - CMD: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+  # - CMD: apt-cache policy docker-ce
+  # - APT: {docker-ce}
+  # # - CMD: sudo systemctl status docker
+  # - CMD: usermod -aG docker ${USER}
+  # - CMD: sudo docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=root1234 -p 3306:3306 -d docker.io/library/mariadb:10.4
+  # - CMD: sleep 15s
 
 jobs:
+  - name: git clone the project
+    steps:
+      - name: git clone with username and password
+        run: git clone https://${{secrets.username}}:${{secrets.password}}@github.ncsu.edu/engr-csc326-staff/iTrust2-v10.git
+   
+  - name: Run mariadb via docker
+    steps: 
+    - name: download docker package
+      run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - name: run installation
+      run: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+    - name: cache
+      run: apt-cache policy docker-ce
+    - name: install docker
+      run: apt install docker -y
+    - name: grant access
+      run: usermod -aG docker ${USER}
+    - name: Run docker
+      run: sudo docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=${{secrets.mysql_password}} -p 3306:3306 -d docker.io/library/mariadb:10.4
+    - name: pause for 15s
+      run: sleep 15s
+
+
   - name: build-itrust
     steps:
       - name: iTrust2 mvn build
