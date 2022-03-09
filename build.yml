@@ -26,7 +26,7 @@ jobs:
   - name: git clone the project
     steps:
       - name: git clone with username and password
-        run: git clone https://${{secrets.username}}:${{secrets.password}}@github.ncsu.edu/engr-csc326-staff/iTrust2-v10.git
+        run: git clone https://${{TOKEN}}@github.ncsu.edu/engr-csc326-staff/iTrust2-v10.git
    
   - name: Run mariadb via docker
     steps: 
