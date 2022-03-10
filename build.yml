@@ -38,6 +38,9 @@ jobs:
       - name: Clean up Docker containers
         run: (sudo docker stop $(sudo docker ps -a -q) || true) && (sudo docker rm $(sudo docker ps -a -q) || true)
         rebuild: true
+      - name: Wait for container to be ready
+        run: sleep 15s
+        rebuild: true
       - name: Set up MariaDB
         run: sudo docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=$MYSQL_PW -p 3306:3306 -d docker.io/library/mariadb:10.4
         env:
