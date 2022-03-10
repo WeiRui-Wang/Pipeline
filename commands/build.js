@@ -38,16 +38,12 @@ exports.handler = async argv => {
         doc['setup'].length;
         if (doc['setup']['apt'] != undefined) {
             for await (const item of doc['setup']['apt']) {
-                process.stdout.write(`Installing ${item}...`);
+                console.log(`Installing ${item}...`);
                 try {
-                    await exec(`${env.CONNECTION_INFORMATION} 'sudo apt install ${item} -y 2>&1'`);
-                    process.stdout.clearLine(0);
-                    process.stdout.cursorTo(0);
-                    console.log(`${chalk.inverse('SUCCESS')}: apt install ${item}`);
+                    console.log(await exec(`${env.CONNECTION_INFORMATION} 'sudo apt install ${item} -y 2>&1'`, {stdio: 'pipe'}).toString());
+                    console.log(`${chalk.inverse('SUCCESS')}: apt install ${item}\n`);
                 } catch (e) {
-                    process.stdout.clearLine(0);
-                    process.stdout.cursorTo(0);
-                    console.log(`${chalk.inverse('FAILURE')}: apt install ${item}`);
+                    console.log(`${chalk.inverse('FAILURE')}: apt install ${item}\n`);
                 }
             }
         }
