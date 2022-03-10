@@ -1,16 +1,15 @@
 setup:
-  - apt:
-      - npm
-      - wget
-      - curl
-      - maven
-      - gnupg
-      - nodejs
-      - lsb-release
-      - mysql-server
-      - openjdk-11-jdk
-      - ca-certificates
-
+  apt:
+    - npm
+    - wget
+    - curl
+    - maven
+    - gnupg
+    - nodejs
+    - lsb-release
+    - mysql-server
+    - openjdk-11-jdk
+    - ca-certificates
 jobs:
   - name: itrust-build
     steps:

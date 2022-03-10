@@ -25,9 +25,23 @@ exports.handler = async argv => {
     const ymlFilePath = path.join(path.dirname(require.main.filename), buildYml);
     try {
         const doc = yaml.load(fs.readFileSync(ymlFilePath, 'utf8'));
-        // console.log(doc);
+        if (doc['setup']['apt'] != undefined) {
+            for await (const item of doc['setup']['apt']) {
+                await exec(`${env.CONNECTION_INFORMATION} 'sudo apt install ${item} -y'`).on('exit', (code) => {
+                    if (code == 0) {
+                        console.log(`${chalk.bgGreenBright('SUCCESS')}: apt install ${item}`);
+                    } else {
+                        console.log(`${chalk.bgRedBright('FAILURE')}: apt install ${item}`);
+                    }
+                });
+            }
+        }
+
+        // console.log(doc['setup']['apt'] != undefined);
+        // console.log(doc['jobs'][0]['steps'].length);
     } catch (e) {
         console.log(chalk.bgRed(`error while loading ${buildYml}, make sure file ${ymlFilePath} exist and valid.`));
+        return;
     }
 
     // console.log(env);
