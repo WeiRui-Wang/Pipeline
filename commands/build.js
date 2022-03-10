@@ -83,7 +83,7 @@ exports.handler = async argv => {
             throw ``;
         }
     } catch (e) {
-        console.log(chalk.inverse(`error while parsing ${buildYml}, ${ymlFilePath} must exist and valid.`));
+        console.log(chalk.inverse(`please ensure all external resources '${buildYml}', '${ymlFilePath}' or build job '${jobName}' exists and valid`));
     }
     fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
 };
