@@ -24,22 +24,24 @@ jobs:
       - name: Check out repository
         run: git clone https://$TOKEN@github.ncsu.edu/engr-csc326-staff/iTrust2-v10.git
         env:
-          - $TOKEN
+          - TOKEN
       - name: Move out repository
         run: sudo mv iTrust2-v10/iTrust2/ ./
       - name: Copy config files for Spring Boot
         run: cp iTrust2/src/main/resources/application.yml.template iTrust2/src/main/resources/application.yml
+        rebuild: true
       - name: Edit config file with DB credentials
         run: sed -i "s/password\:/password\:\ $MYSQL_PW/g" iTrust2/src/main/resources/application.yml
         env:
-          - $MYSQL_PW
+          - MYSQL_PW
+        rebuild: true
       - name: Clean up Docker containers
         run: (sudo docker stop $(sudo docker ps -a -q) || true) && (sudo docker rm $(sudo docker ps -a -q) || true)
         rebuild: true
       - name: Set up MariaDB
         run: sudo docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=$MYSQL_PW -p 3306:3306 -d docker.io/library/mariadb:10.4
         env:
-          - $MYSQL_PW
+          - MYSQL_PW
         rebuild: true
       - name: Wait for container to be active
         run: sleep 15s

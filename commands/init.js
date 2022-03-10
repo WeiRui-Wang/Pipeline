@@ -17,9 +17,10 @@ exports.handler = async argv => {
     const {} = argv;
     console.log(chalk.green("Preparing computing environment..."));
     await exec('sh commands/init.sh', (error, stdout) => {
-        console.log(stdout);
+        console.log(chalk.inverse(stdout));
         let env = envfile.parseFileSync(envFilePath);
         env.CONNECTION_INFORMATION = stdout.replace(/[\n]$/, '');
+        env.rebuildable = false;
         env.init = true;
         fs.writeFileSync(envFilePath, envfile.stringifySync(env));
     })
