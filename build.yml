@@ -14,27 +14,33 @@ setup:
 jobs:
   - name: itrust-build
     steps:
-      - name: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      - name: Source setup
         run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-      - name: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+      - name: Source install setup
         run: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
-      - name: sudo apt update -qq
+      - name: Update package information
         run: sudo apt update -qq
-      - name: sudo apt install docker-ce docker-ce-cli containerd.io mariadb-client-core-10.3 -y
+      - name: Install Docker
         run: sudo apt install docker-ce docker-ce-cli containerd.io mariadb-client-core-10.3 -y
-      - name: check out repository
+      - name: Check out repository
         run: git clone https://$TOKEN@github.ncsu.edu/engr-csc326-staff/iTrust2-v10.git
-      - name: move out repository
+        env:
+          - $TOKEN
+      - name: Move out repository
         run: sudo mv iTrust2-v10/iTrust2/ ./
       - name: Copy config files for Spring Boot
         run: cp iTrust2/src/main/resources/application.yml.template iTrust2/src/main/resources/application.yml
       - name: Edit config file with DB credentials
         run: sed -i "s/password\:/password\:\ $MYSQL_PW/g" iTrust2/src/main/resources/application.yml
+        env:
+          - $MYSQL_PW
       - name: Clean up Docker containers
         run: (sudo docker stop $(sudo docker ps -a -q) || true) && (sudo docker rm $(sudo docker ps -a -q) || true)
         rebuild: true
       - name: Set up MariaDB
         run: sudo docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=$MYSQL_PW -p 3306:3306 -d docker.io/library/mariadb:10.4
+        env:
+          - $MYSQL_PW
         rebuild: true
       - name: Wait for container to be active
         run: sleep 15s
