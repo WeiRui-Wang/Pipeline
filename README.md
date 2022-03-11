@@ -21,6 +21,9 @@ Provision and run tasks inside a computing environment from a host machine by de
 
 
 + Each item in `jobs` must have `name` and `steps`, and `steps` can consists a list of steps that has `name` and `run` for each step within `steps` list.
+  + Within each `step` item, optional parameters `env` and `rebuild` can be used.
+  + `env` indicate the enviroment variable that should be retrived from the `.env` file as predefined.
+  + `rebuild` indicate the step that is going to run after the initial build run so that during rebuild, original initial enviroment setup steps can be skipped so it is more dynamic.
 + Each item from `setup` must be following same level of indentation as shown below, and fall within 3 major general format.
   + **APT**: package names under `apt`, each in an individual line.
   + **URL**: URLs that can be downloaded without credential and token requires. Otherwise, include the command under `jobs`.
