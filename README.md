@@ -35,17 +35,18 @@ setup:
   apt:
     - npm
     - wget
-    - maven
   url:
-    - https://github.ncsu.edu/engr-csc326-staff/iTrust2-v10
+    - {someURL}
 jobs:
-  - name: build-itrust
+  - name: itrust-build
     steps:
-      - name: Move out repository
-        run: sudo mv iTrust2-v10/iTrust2/ ./
-      - name: iTrust2 mvn build
-        run: cd iTrust2 && mvn --batch-mode --update-snapshots clean test
-      
+      - name: Source setup
+        run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+      - name: Set up MariaDB
+        run: sudo docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=$MYSQL_PW -p 3306:3306 -d docker.io/library/mariadb:10.4
+        env:
+          - MYSQL_PW
+        rebuild: true
 ```
 
 
