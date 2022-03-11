@@ -47,6 +47,20 @@ exports.handler = async argv => {
                 }
             }
         }
+
+        if (doc['setup']['url'] != undefined && !rebuilding) {
+            for await (const item of doc['setup']['url']) {
+                console.log(`Downloading via url: ${item}...`);
+                try {
+                    console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'sudo curl ${item} 2>&1'`, {stdio: 'pipe'}).toString());
+                    console.log(`${chalk.inverse('SUCCESS')}: curl ${item}\n`);
+                } catch (e) {
+                    console.log(`${chalk.inverse('FAILURE')}: curl ${item}\n`);
+                }
+            }
+        }
+
+
         for await (const item of doc['jobs']) {
             if (item['name'] === jobName) {
                 item['steps'].length;
