@@ -2,8 +2,8 @@
 
 ## INDEX
 - [Project Overview](#project-overview)
-- [YAML Format](#yaml-build-job-specification-format)
-- [Env Format](#env-file-format)
+- [Build Job Specification](#build-job-specification)
+- [`.env` File Format](#env-file-format)
 - [Screencast](#screencast)
 - [Report](#report)
 - [Commands](#available-commands)
@@ -13,7 +13,7 @@
 ### Project Overview
 Provision and run tasks inside a computing environment from a host machine by designing a pipeline. 
 
-### YAML Build Job Specification Format
+### Build Job Specification
 + Our parser for YAML build job specification supports the formatting as shown below. 
 + `setup` consists a list of enviroment setup commands and packages to be installed before the job execution.
 + `jobs` consists of list of jobs will be run after `setup`.
@@ -51,7 +51,7 @@ jobs:
 
 
 
-### Env File Format
+### `.env` File Format
 Purpose: Pass sensitive setup information to the pipeline via  a `.env` file. 
 
 Set Up: 
