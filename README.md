@@ -38,8 +38,8 @@ Set Up:
 1. Create a .env file accessible to the repo based on [`.env.template`](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/blob/main/.env.template)
 2. Generate and update with a personal [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) 
 
-3. Information automatially stored:
-- VM Connection Information
+3. Include and update password for MYSQL
+
 
 Potential Error:
  "You should have a .env containing project specific environment variables"
@@ -58,7 +58,13 @@ TODO
 ### Reports
 [Checkpoint-M1 Report](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/blob/main/CHECKPOINT-M1.md)
 
-Milestone Report: TODO
+Milestone Report: 
+
+|Issue| Description|Resolution|
+|---|---|---|
+|Setting Up the Pipeline| There were multiple discussions about how different components of the pipeline would interact and communicate with each other including Host Machine, Virtual Machine, Environment Variables, Parser and the jobs required to build iTrust.  | Pipeline design consisted of creating the VM using bakerx followed by setting up environment settings which are accessible to the parser which converts the build.yml instructions and builds iTrust. 
+|Set up Tools | Consideration of multiple tools available to setup java based programs including Ansible and Jenkins. Had to consider constrains and convertion of yml files to readible files by program doing the setup. | Decided to implement a simple parser that takes a yml file as input and converts it to executable scripts within the VM. 
+
 
 
 ### Available Commands
@@ -71,7 +77,7 @@ node index.js init
 ```
 
 ```
-node build itrust-build build.yml
+pipeline build itrust-build build.yml
 ```
 
 ## Project Evaluation
