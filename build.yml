@@ -52,6 +52,3 @@ jobs:
       - name: Build iTrust2 with Maven
         run: cd iTrust2 && sudo mvn --batch-mode --update-snapshots clean test
         rebuild: true
-      - name: Stop and clean up Docker containers after build
-        run: (sudo docker stop $(sudo docker ps -a -q) || true) && (sudo docker rm $(sudo docker ps -a -q) || true)
-        rebuild: true
