@@ -67,7 +67,7 @@ exports.handler = async argv => {
                             continue;
                         }
                         console.log(`Running: ${step['name']}...`);
-                        console.log(await exec(`${env.CONNECTION_INFORMATION} '${run} 2>&1'`, {stdio: 'pipe'}).toString());
+                        console.log(await exec(`${env.CONNECTION_INFORMATION} "${run} 2>&1"`, {stdio: 'pipe'}).toString());
                         console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
                     } catch (e) {
                         if (!rebuilding) {
