@@ -85,16 +85,13 @@ Solution: Create .env file
 
 
 
-### Available Commands
+### Available Commands For Running
 ```
 npm install
+npm link
 ```
-
 ```
 pipeline init
-```
-
-```
 pipeline build itrust-build build.yml
 ```
 
