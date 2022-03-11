@@ -36,11 +36,11 @@ exports.handler = async argv => {
         const doc = yaml.load(fs.readFileSync(ymlFilePath, 'utf8'));
         doc['jobs'].length;
         doc['setup'].length;
-        if (doc['setup']['apt'] != undefined) {
+        if (doc['setup']['apt'] != undefined && !rebuilding) {
             for await (const item of doc['setup']['apt']) {
                 console.log(`Installing ${item}...`);
                 try {
-                    console.log(await exec(`${env.CONNECTION_INFORMATION} 'sudo apt install ${item} -y 2>&1'`, {stdio: 'pipe'}).toString());
+                    console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'sudo apt install ${item} -y 2>&1'`, {stdio: 'pipe'}).toString());
                     console.log(`${chalk.inverse('SUCCESS')}: apt install ${item}\n`);
                 } catch (e) {
                     console.log(`${chalk.inverse('FAILURE')}: apt install ${item}\n`);
@@ -62,18 +62,19 @@ exports.handler = async argv => {
                         }
                         if (step['rebuild'] != undefined) {
                             envVar.rebuildable = true;
+                            fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                         }
                         if (rebuilding && step['rebuild'] == undefined) {
                             continue;
                         }
                         console.log(`Running: ${step['name']}...`);
-                        console.log(await exec(`${env.CONNECTION_INFORMATION} "${run} 2>&1"`, {stdio: 'pipe'}).toString());
+                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "${run} 2>&1"`, {stdio: 'inherit'});
                         console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
                     } catch (e) {
-                        if (!rebuilding) {
+                        if (!rebuilding && !envVar.rebuildable) {
                             envVar.init = false;
+                            fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                         }
-                        console.log(e.stdout.toString());
                         console.log(`${chalk.inverse('FAILURE')}: ${step['name']}\n`);
                         break;
                     }
@@ -85,5 +86,4 @@ exports.handler = async argv => {
     } catch (e) {
         console.log(chalk.inverse(`please ensure all external resources '${buildYml}', '${ymlFilePath}' or build job '${jobName}' exists and valid`));
     }
-    fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
 };
