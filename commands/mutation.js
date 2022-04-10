@@ -4,7 +4,7 @@ const options = {tokens:true, tolerant: true, loc: true, range: true };
 const fs = require("fs");
 const chalk = require('chalk');
 
-let operations = [ NegateConditionals, ChangeBoundary, FlipIncremental ]
+let operations = [NegateConditionals, ChangeBoundary, FlipIncremental,EmptyString, ChangeConExp, ChangeConst]
 
 function rewrite( filepath, newPath) {
 
@@ -68,7 +68,7 @@ function FlipIncremental(ast) {
 
     let candidates = 0;
     traverseWithParents(ast, (node) => {
-        if( node.operator === "++" || node.operator === "--" ) {
+        if( node.type === "UpdateExpression" && (node.operator === "++" || node.operator === "--") ) {
             candidates++;
         }
     })
@@ -76,7 +76,7 @@ function FlipIncremental(ast) {
     let mutateTarget = getRandomInt(candidates);
     let current = 0;
     traverseWithParents(ast, (node) => {
-        if( node.operator === "++" ) {
+        if( node.type === "UpdateExpression" && node.operator === "++" ) {
             if( current === mutateTarget ) {
                 node.operator = "--"
                 console.log( chalk.red(`Replacing ++ with -- on line ${node.loc.start.line}` ));
@@ -105,17 +105,96 @@ function ChangeBoundary(ast) {
     let mutateTarget = getRandomInt(candidates);
     let current = 0;
     traverseWithParents(ast, (node) => {
-        if( node.operator === ">" ) {
+        if( node.type === "BinaryExpression" && node.operator === ">" ) {
             if( current === mutateTarget ) {
                 node.operator = ">="
                 console.log( chalk.red(`Replacing > with >= on line ${node.loc.start.line}` ));
             }
             current++;
         }
-        else{
+        else if( node.type === "BinaryExpression" && node.operator === "<" ){
             if( current === mutateTarget ) {
                 node.operator = "<="
                 console.log( chalk.red(`Replacing < with <= on line ${node.loc.start.line}` ));
+            }
+            current++;
+        }
+    })
+
+}
+
+
+function ChangeConExp(ast) {
+
+    let candidates = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "LogicalExpression" && (node.operator === "&&" || node.operator === "||") ) {
+            candidates++;
+        }
+    })
+
+    let mutateTarget = getRandomInt(candidates);
+    let current = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "LogicalExpression" && node.operator === "&&" ) {
+            if( current === mutateTarget ) {
+                node.operator = "||"
+                console.log( chalk.red(`Replacing && with || on line ${node.loc.start.line}` ));
+            }
+            current++;
+        }
+        else if( node.type === "LogicalExpression" && node.operator === "||" ){
+            if( current === mutateTarget ) {
+                node.operator = "&&"
+                console.log( chalk.red(`Replacing || with && on line ${node.loc.start.line}` ));
+            }
+            current++;
+        }
+    })
+
+}
+
+function EmptyString(ast) {
+
+    let candidates = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "Literal" && node.raw === "\"\"" ) {
+            candidates++;
+        }
+    })
+
+    let mutateTarget = getRandomInt(candidates);
+    let current = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "Literal" && node.raw === "\"\"" ) {
+            if( current === mutateTarget ) {
+                node.value = "<div>Bug</div>"
+                node.raw =  "\"<div>Bug</div>\""
+                console.log( chalk.red(`Replacing empty string with <div>Bug</div> on line ${node.loc.start.line}` ));
+            }
+            current++;
+        }
+    })
+
+}
+
+function ChangeConst(ast) {
+
+    let candidates = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "Literal" && typeof node.value == "number" ) {
+            candidates++;
+        }
+    })
+
+    let mutateTarget = getRandomInt(candidates);
+    let current = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "Literal" && typeof node.value == "number") {
+            if( current === mutateTarget ) {
+                node.value = node.value+1
+                node.raw = String(node.value)
+                console.log( chalk.red(`Increment the constant by 1 on line ${node.loc.start.line}` ));
             }
             current++;
         }
