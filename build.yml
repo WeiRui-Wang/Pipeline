@@ -63,7 +63,7 @@ jobs:
       - name: Go to the screenshot repo
         run: cd screenshot
       - name: install npm
-        run: sudo npm install
+        run: sudo apt install npm -Y
       - name: Link npm
         run: sudo npm link
       - name: return to home directory
