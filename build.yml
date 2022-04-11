@@ -55,7 +55,6 @@ jobs:
         run: cd iTrust2 && sudo mvn --batch-mode --update-snapshots clean test
         rebuild: true
   - name: mutation-coverage
-<<<<<<< HEAD
     steps:
       - name: Clone the repo being tested
         run: git clone https://github.com/chrisparnin/checkbox.io-micro-preview.git
@@ -89,6 +88,7 @@ jobs:
        - http://localhost:3000/survey/upload.md
        - http://localhost:3000/survey/survey.md
        - http://localhost:3000/survey/variations.md
+<<<<<<< HEAD
 =======
     steps: 
       - name: Setup checkbox.io-micro-preview
@@ -125,3 +125,5 @@ jobs:
           - http://localhost:3000/survey/variations.md 
 
 >>>>>>> 1e6f6a90f17389dabcea75b2828775b77c238a81
+=======
+>>>>>>> 9f0e20b853e84adf6e9ab0c374b4b3dbeab89fc6
