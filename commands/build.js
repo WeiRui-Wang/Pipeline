@@ -78,7 +78,7 @@ exports.handler = async argv => {
                             envVar.rebuildable = true;
                             fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                         }
-                        if (rebuilding && step['rebuild'] == undefined) {
+                        if (rebuilding && (step['rebuild'] == undefined || step['rebuild'] == false)) {
                             continue;
                         }
                         console.log(`Running: ${step['name']}...`);
@@ -91,6 +91,16 @@ exports.handler = async argv => {
                         }
                         console.log(`${chalk.inverse('FAILURE')}: ${step['name']}\n`);
                         break;
+                    }
+                }
+                if (typeof item['mutation'] !== "undefined") {
+                    item['mutation']['iterations'].length;
+                    item['mutation']['snapshots'].length;
+                    console.log(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone 2>&1'`);
+                    // console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone ${url} 2>&1'`, {stdio: 'pipe'}).toString());
+                    const iterations = await item['mutation']['iterations'];
+                    for await (const snapshot of item['mutation']['snapshots']) {
+                        console.log(snapshot);
                     }
                 }
                 break;
