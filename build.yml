@@ -10,9 +10,16 @@ setup:
     - mysql-server
     - openjdk-11-jdk
     - ca-certificates
-    - esprima
-    - escodegen
 jobs:
+  - name: mutation-coverage
+    mutation:
+      url: https://github.com/chrisparnin/checkbox.io-micro-preview.git
+      iterations: 1000
+      snapshots:
+        - http://localhost:3000/survey/long.md
+        - http://localhost:3000/survey/upload.md
+        - http://localhost:3000/survey/survey.md
+        - http://localhost:3000/survey/variations.md
   - name: itrust-build
     steps:
       - name: Source setup
@@ -54,76 +61,3 @@ jobs:
       - name: Build iTrust2 with Maven
         run: cd iTrust2 && sudo mvn --batch-mode --update-snapshots clean test
         rebuild: true
-  - name: mutation-coverage
-    steps:
-      - name: Clone the repo being tested
-        run: git clone https://github.com/chrisparnin/checkbox.io-micro-preview.git
-      - name: Clone the screenshot repo
-        run: git clone https://github.com/ruttabega/screenshot.git
-      - name: Go to the screenshot repo
-        run: cd screenshot
-      - name: Install npm
-        run: sudo npm install
-      - name: Link npm
-        run: sudo npm link
-      - name: Go back to home dir
-        run: cd ..
-      - name: Open the tested repo
-        run: cd checkbox.io-micro-preview
-      - name: Back up the original markdown.js file
-        run: cp markdown.js markdown_ori.js
-      - name: Copy the mutation coverage tool to current dir
-        run: cp /bakerx/commands/MC.js MC.js
-      - name: Copy the mutation operator to current dir
-        run: cp /bakerx/commands/mutate.js mutate.js
-      - name: Install npm
-        run: npm install
-    mutation:
-      url: https://github.com/chrisparnin/checkbox.io-micro-preview
-      srcfile: markdown.js
-      desfile: markdown_mod.js
-      iterations: 1000
-      snapshots:
-       - http://localhost:3000/survey/long.md
-       - http://localhost:3000/survey/upload.md
-       - http://localhost:3000/survey/survey.md
-       - http://localhost:3000/survey/variations.md
-<<<<<<< HEAD
-=======
-    steps: 
-      - name: Setup checkbox.io-micro-preview
-        run: git clone https://github.com/chrisparnin/checkbox.io-micro-preview.git
-      - name: Clone screenshot repo
-        run: git clone https://github.com/ruttabega/screenshot.git
-      - name: Go to the screenshot repo
-        run: cd screenshot
-      - name: install npm
-        run: sudo apt install npm -Y
-      - name: Link npm
-        run: sudo npm link
-      - name: return to home directory
-        run: cd ..
-      - name: Open checkbox.io-micro-preview
-        run: cd checkbox.io-micro-preview
-      - name: markdown.js file
-        run: cp marqdown.js markdown_ori.js
-      - name: copy mutation tool
-        run: cp /bakerx/commands/MC.js MC.js
-      - name: Copy mutation operator
-        run: cp /bakerx/commands/mutate.js mutate.js
-      - name: install npm
-        run: sudo npm install
-
-    mutation:
-        url: https://github.com/chrisparnin/checkbox.io-micro-preview
-        file: markdown.js
-        iterations: 1000
-        snapshots:
-          - http://localhost:3000/survey/long.md
-          - http://localhost:3000/survey/upload.md
-          - http://localhost:3000/survey/survey.md
-          - http://localhost:3000/survey/variations.md 
-
->>>>>>> 1e6f6a90f17389dabcea75b2828775b77c238a81
-=======
->>>>>>> 9f0e20b853e84adf6e9ab0c374b4b3dbeab89fc6
