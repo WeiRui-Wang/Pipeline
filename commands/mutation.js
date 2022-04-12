@@ -202,7 +202,8 @@ function ChangeConst(ast) {
 
 }
 
-
+var arg = process.argv.slice(2);
+rewrite(arg[0],arg[1]);
 // rewrite("/Users/cjparnin/classes/devops/checkbox.io-micro-preview/marqdown.js", 
 // "/Users/cjparnin/classes/devops/checkbox.io-micro-preview/marqdown-mod.js")
 
