@@ -63,6 +63,12 @@ exports.handler = async argv => {
 
         for await (const item of doc['jobs']) {
             if (item['name'] === jobName) {
+                if (envVar.rebuildable == 'true' && (envVar.built === undefined || envVar.built != jobName)) {
+                    rebuilding = false;
+                    envVar.built = jobName;
+                    envVar.rebuildable = false;
+                    fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
+                }
                 item['steps'].length;
                 for await (const step of item['steps']) {
                     step['name'].length;
@@ -96,12 +102,15 @@ exports.handler = async argv => {
                 if (typeof item['mutation'] !== "undefined") {
                     item['mutation']['iterations'].length;
                     item['mutation']['snapshots'].length;
-                    console.log(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone 2>&1'`);
-                    // console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone ${url} 2>&1'`, {stdio: 'pipe'}).toString());
                     const iterations = await item['mutation']['iterations'];
                     for await (const snapshot of item['mutation']['snapshots']) {
-                        console.log(snapshot);
+                        console.log(`${snapshot.split('/').pop()}`);
+                        for (let i = 1; i <= iterations; i++) {
+                        }
                     }
+                    // console.log(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone 2>&1'`);
+                    // console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone ${url} 2>&1'`, {stdio: 'pipe'}).toString());
+                    // console.log(iterations);
                 }
                 break;
             }

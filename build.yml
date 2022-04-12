@@ -16,6 +16,16 @@ jobs:
       - name: Check out microservice module
         run: git clone https://github.com/chrisparnin/checkbox.io-micro-preview.git
         rebuild: false
+      - name: Install microservice module
+        run: cd checkbox.io-micro-preview/ && npm install
+      - name: Preparing mutation.js module
+        run: cp /bakerx/commands/mutation.js ./
+      - name: Preparing mutate.js module
+        run: cp /bakerx/commands/mutate.js ./
+      - name: Preparing mutate module
+        run: cp /bakerx/package.json ./
+      - name: Install mutate module
+        run: npm install
     mutation:
       iterations: 1000
       snapshots:
