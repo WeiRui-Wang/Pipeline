@@ -3,20 +3,27 @@ const escodegen = require("escodegen");
 const options = {tokens:true, tolerant: true, loc: true, range: true };
 const fs = require("fs");
 const chalk = require('chalk');
+const exec = require('child_process').execSync;
+const { promisify } = require('util');
 
-let operations = [NegateConditionals, ChangeBoundary, FlipIncremental,EmptyString, ChangeConExp, ChangeConst]
 
-function rewrite( filepath, newPath) {
+let operations = [NegateConditionals, ChangeBoundary, FlipIncremental, EmptyString, ChangeConExp, ChangeConst]
+
+async function rewrite(filepath, newPath) {
 
     var buf = fs.readFileSync(filepath, "utf8");
     var ast = esprima.parse(buf, options);    
-    let ind = getRandomInt(operations.length)
-    let op = operations[ind];
+    let ind = getRandomInt(operations.length+1)
+    if (ind!=operations.length){
+        let op = operations[ind];
+        op(ast);
+        let code = escodegen.generate(ast);
+        fs.writeFileSync( newPath, code);
+    }
+    else{
+        await ChangeFlow(filepath,newPath)
+    }
     
-    op(ast);
-
-    let code = escodegen.generate(ast);
-    fs.writeFileSync( newPath, code);
 }
 
 function NegateConditionals(ast) {
@@ -83,7 +90,7 @@ function FlipIncremental(ast) {
             }
             current++;
         }
-        else{
+        else if( node.type === "UpdateExpression" && node.operator === "--" ){
             if( current === mutateTarget ) {
                 node.operator = "++"
                 console.log( chalk.red(`Replacing -- with ++ on line ${node.loc.start.line}` ));
@@ -158,7 +165,7 @@ function EmptyString(ast) {
 
     let candidates = 0;
     traverseWithParents(ast, (node) => {
-        if( node.type === "Literal" && node.raw === "\"\"" ) {
+        if( node.type === "Literal" && node.raw === "\'\'" ) {
             candidates++;
         }
     })
@@ -166,7 +173,7 @@ function EmptyString(ast) {
     let mutateTarget = getRandomInt(candidates);
     let current = 0;
     traverseWithParents(ast, (node) => {
-        if( node.type === "Literal" && node.raw === "\"\"" ) {
+        if( node.type === "Literal" && node.raw === "\'\'" ) {
             if( current === mutateTarget ) {
                 node.value = "<div>Bug</div>"
                 node.raw =  "\"<div>Bug</div>\""
@@ -199,7 +206,15 @@ function ChangeConst(ast) {
             current++;
         }
     })
+}
 
+
+
+async function ChangeFlow(filepath,newPath) {
+    const number  = await exec("grep -o 'else if' marqdown.js | wc -l")
+    let i = getRandomInt(number)+1;
+    await exec(`sed 's/else if/if/${i}' ${filepath} > ${newPath}`);
+    console.log( chalk.red(`Change the No.${i} occurence of else if into if.` ));
 }
 
 var arg = process.argv.slice(2);
