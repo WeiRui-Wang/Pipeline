@@ -11,7 +11,7 @@ function rewrite( filepath, newPath) {
     var buf = fs.readFileSync(filepath, "utf8");
     var ast = esprima.parse(buf, options);    
     let ind = getRandomInt(operations.length)
-    let op = operations[id];
+    let op = operations[ind];
     
     op(ast);
 

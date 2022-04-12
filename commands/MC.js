@@ -13,7 +13,8 @@ exports.builder = yargs => {
 exports.handler = async argv => {
     const {src_filename, des_filename, iterations, urls} = argv;
     var total = 0;
-    var failed = 0;
+    var test_fail = 0;
+    var screenshot_fail=0;
     var delta = [0,0,0,0];
     try{
         console.log(chalk.green(`Mutating js file ${src_filename}`));
@@ -21,27 +22,37 @@ exports.handler = async argv => {
         // TO DO: resume to execution after catch
         for (i=0; i<iterations; i++){
             mutate.rewrite(src_filename, des_filename);
-        
-        try {
-            await exec(`node index.js`);
-        } catch (e) {
-            failed+=1;
-            console.log(`${chalk.inverse('FAILURE')}: Start service`);
+            try {
+                await exec(`node index.js`);
+            } catch (e) {
+                test_fail+=1;
+                console.log(`${chalk.inverse('FAILURE')}: Start service`);
+            }
+            try{
+                for (j=0;j<urls.length;j++){
+                    let url = urls[j];
+                    let fname = url.split('/')
+                    fname = fname[fname.length-1]
+                    fname = fname.split('.')[0]+String(i)
+                    await exec(`screenshot ${url} ${fname}`);
+                }
+                
+            }
+            catch (e) {
+                screenshot_fail+=1
+                console.log(`${chalk.inverse('FAILURE')}: Screenshot http://localhost:3000/survey/long.md`);
+            }
+            try {
+                console.log(await exec(``, {stdio: 'pipe'}).toString());
+            } catch (e) {
+                console.log(`${chalk.inverse('FAILURE')}: Terminate service`);
+            }
         }
-        try{
-            //TO DO; for each automation
-            await exec(`screenshot http://localhost:3000/survey/long.md long${i}`);
-        }
-        catch (e) {
-            failed+=1
-            console.log(`${chalk.inverse('FAILURE')}: Screenshot http://localhost:3000/survey/long.md`);
-        }
-        try {
-            console.log(await exec(``, {stdio: 'pipe'}).toString());
-        } catch (e) {
-            console.log(`${chalk.inverse('FAILURE')}: Terminate service`);
-        }
-    }
+        total = test_fail+screenshot_fail
+        let score = (total/1000)*100
+        console.log(`${chalk.inverse('Failure in running service')}: ${test_fail}`);
+        console.log(`${chalk.inverse('Failure in taking screenshot')}: ${screenshot_fail}`);
+        console.log(`${chalk.inverse('Overall Mutation Coverage')}: ${score}%`);
 
     } catch (e) {
         console.log(`${e}`); 

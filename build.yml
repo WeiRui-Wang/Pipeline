@@ -10,8 +10,14 @@ setup:
     - mysql-server
     - openjdk-11-jdk
     - ca-certificates
-    - esprima
-    - escodegen
+    - libatk-bridge2.0-0
+    - fonts-liberation
+    - libgbm-dev
+    - gconf-service
+    - libatk1.0-0
+    - libxkbcommon-x11-0
+    - libxdamage1
+    - libpangocairo-1.0-0
 jobs:
   - name: itrust-build
     steps:
@@ -66,6 +72,7 @@ jobs:
         run: sudo npm install
       - name: Link npm
         run: sudo npm link
+      - name: npm install libxkbcommon-x11-0
       - name: Go back to home dir
         run: cd ..
       - name: Open the tested repo
@@ -75,9 +82,13 @@ jobs:
       - name: Copy the mutation coverage tool to current dir
         run: cp /bakerx/commands/MC.js MC.js
       - name: Copy the mutation operator to current dir
-        run: cp /bakerx/commands/mutate.js mutate.js
+        run: cp /bakerx/commands/mutation.js mutation.js
       - name: Install npm
         run: npm install
+      - name: Install esprima
+        run: npm install esprima
+      - name: Install escodegen
+        run: npm install escodegen
     mutation:
       url: https://github.com/chrisparnin/checkbox.io-micro-preview
       srcfile: markdown.js
