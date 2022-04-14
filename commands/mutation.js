@@ -10,21 +10,20 @@ const exec1 = promisify(require('child_process').exec);
 
 let operations = [NegateConditionals, ChangeBoundary, FlipIncremental, EmptyString, ChangeConExp, ChangeConst,EarlyReturn]
 
- function rewrite(filepath, newPath) {
+async function rewrite(filepath, newPath) {
 
 var buf = fs.readFileSync(filepath, "utf8");
     var ast = esprima.parse(buf, options);    
     let ind = getRandomInt(operations.length+1)
-    ind = 6
     if (ind<6){
         let op = operations[ind];
         op(ast);
         let code = escodegen.generate(ast);
         fs.writeFileSync( newPath, code);
     }
-    // else if (ind==7){
-    //     await ChangeFlow(filepath,newPath);
-    // }
+    else if (ind==7){
+        await ChangeFlow(filepath,newPath);
+    }
     else if (ind==6){
         EarlyReturn(ast,filepath,newPath);
     }
