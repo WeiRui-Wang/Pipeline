@@ -4,27 +4,34 @@ const options = {tokens:true, tolerant: true, loc: true, range: true };
 const fs = require("fs");
 const chalk = require('chalk');
 const exec = require('child_process').execSync;
+const util = require('util');
 const { promisify } = require('util');
+const exec1 = promisify(require('child_process').exec);
 
+let operations = [NegateConditionals, ChangeBoundary, FlipIncremental, EmptyString, ChangeConExp, ChangeConst,EarlyReturn]
 
-let operations = [NegateConditionals, ChangeBoundary, FlipIncremental, EmptyString, ChangeConExp, ChangeConst]
+ function rewrite(filepath, newPath) {
 
-async function rewrite(filepath, newPath) {
-
-    var buf = fs.readFileSync(filepath, "utf8");
+var buf = fs.readFileSync(filepath, "utf8");
     var ast = esprima.parse(buf, options);    
     let ind = getRandomInt(operations.length+1)
-    if (ind!=operations.length){
+    ind = 6
+    if (ind<6){
         let op = operations[ind];
         op(ast);
         let code = escodegen.generate(ast);
         fs.writeFileSync( newPath, code);
     }
-    else{
-        await ChangeFlow(filepath,newPath)
+    // else if (ind==7){
+    //     await ChangeFlow(filepath,newPath);
+    // }
+    else if (ind==6){
+        EarlyReturn(ast,filepath,newPath);
     }
+        
     
 }
+exports.rewrite = rewrite;
 
 function NegateConditionals(ast) {
 
@@ -217,10 +224,66 @@ async function ChangeFlow(filepath,newPath) {
     console.log( chalk.red(`Change the No.${i} occurence of else if into if.` ));
 }
 
+
+async function EarlyReturn(ast,filepath,newPath){
+    let candidates = 0;
+    traverseWithParents(ast, (node) => {
+        if( node.type === "ReturnStatement") {
+            candidates++;
+        }
+    })
+
+    let mutateTarget = getRandomInt(candidates);
+    let current = 0;
+    var start,end, loc
+    traverseWithParents(ast, (node) => {
+        if( node.type === "ReturnStatement") {
+            if( current === mutateTarget ) {
+                start = node.loc.start.line
+                end = node.loc.end.line
+                loc = node.range
+                console.log(node.loc.start.line, node.loc.end.line);
+            }
+            current++;
+        }
+    })
+
+    
+    var minimum = start
+    traverseWithParents(ast, (node) => {
+        if (node.hasOwnProperty("range")){
+            if( node.range[0]<=loc[0] && node.range[1]>=loc[1] ) {
+                if (node.loc.start.line<minimum && node.loc.start.line!=1 ){
+                    minimum = node.loc.start.line
+                };
+                current++;
+            }
+        }
+        
+    }
+    )
+    const insert_ind = minimum+getRandomInt(start-minimum)
+    // let exec_prom = util.promisify(exec)
+    // let text = exec(`head -${end} ${filepath} | tail +${start}`);
+    await exec1(`head -${end} ${filepath} | tail +${start}`, async function(error, stdout, stderr){
+        var text = String(stdout);
+        console.log(insert_ind,text);
+        var data = fs.readFileSync(filepath).toString().split("\n");
+        data.splice(insert_ind, 0, text);
+        var text = data.join("\n");
+        fs.writeFile(newPath, text, function (err) {
+            if (err) return console.log(err);
+          });
+        // console.log(`sed '${insert_ind} i ${text}' ${filepath} > ${newPath}`);
+        // console.log(await exec(`sed '${insert_ind} i ${text}' ${filepath} | tee ${newPath} `).toString())
+    });
+    console.log("ddd")
+    // await exec(`sed '${insert_ind} i ${text}' ${filepath} > ${newPath}`);
+    // console.log(`sed '${insert_ind} i ${text}' ${filepath} > ${newPath}`)
+};
+
 var arg = process.argv.slice(2);
 rewrite(arg[0],arg[1]);
-// rewrite("/Users/cjparnin/classes/devops/checkbox.io-micro-preview/marqdown.js", 
-// "/Users/cjparnin/classes/devops/checkbox.io-micro-preview/marqdown-mod.js")
 
 
 function getRandomInt(max) {
