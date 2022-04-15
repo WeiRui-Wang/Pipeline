@@ -102,8 +102,7 @@ exports.handler = async argv => {
                 if (typeof item['mutation'] !== "undefined") {
                     item['mutation']['iterations'].length;
                     item['mutation']['snapshots'].length;
-                    // const iterations = await item['mutation']['iterations'];
-                    const iterations = 5;
+                    const iterations = await item['mutation']['iterations'];
                     let passed = 0;
                     let fails = 0;
                     let i = 0;
