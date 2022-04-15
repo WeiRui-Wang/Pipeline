@@ -15,7 +15,7 @@ The goal of the analysis is to calculate the mutation coverage of a test suite. 
 
 For M2 milestone, all previous capability of M1 were retained and module was expanded based on M1. [`.env` File Format](#env-file-format) standard as describe in M1 documentation is still applicable.
 
-### M2 Build Job YAML Specification
+### M2 Build Job Specification
 
 In additional to the previously defined [M1 Build Job Specification](#build-job-specification) for M1, the new feature capability introduced new standards for how `build.yml` defined.
 
