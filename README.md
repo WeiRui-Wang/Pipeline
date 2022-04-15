@@ -20,6 +20,14 @@ For M2 milestone, all previous capability of M1 were retained and module was exp
 
 ### M2 Commands
 
+To run and execute newly implemented M2 module, clone the current repository and locate into the repository folder and run the following commands in sequence.
+```
+npm install
+pipeline init
+pipeline build mutation-coverage build.yml
+```
+Notes: all previous M1 feature were still compatible. Refers to [Commands](#available-commands) for details of M1 features and compatible commands.
+
 ### M2 Screencast
 
 
