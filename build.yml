@@ -27,6 +27,9 @@ jobs:
       - name: Install mutate module
         run: npm install
     mutation:
+      microservice: checkbox.io-micro-preview
+      renderer: marqdown.js
+      driver: mutation.js
       iterations: 1000
       snapshots:
         - http://localhost:3000/survey/long.md

@@ -102,6 +102,9 @@ exports.handler = async argv => {
                 if (typeof item['mutation'] !== "undefined") {
                     item['mutation']['iterations'].length;
                     item['mutation']['snapshots'].length;
+                    item['mutation']['microservice'].length;
+                    item['mutation']['renderer'].length;
+                    item['mutation']['driver'].length;
                     const iterations = await item['mutation']['iterations'];
                     let passed = 0;
                     let fails = 0;
@@ -110,14 +113,14 @@ exports.handler = async argv => {
                         let failed = true;
                         try {
                             if (i == 0) {
-                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "mkdir -p .mutations/marqdown.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js
-                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -rf ./checkbox.io-micro-preview/marqdown.js .mutations/marqdown.js/baseline.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "mkdir -p .mutations/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -rf ./${item['mutation']['microservice']}/${item['mutation']['renderer']} .mutations/${item['mutation']['renderer']}/baseline.js"`, {stdio: 'pipe'});
                             } else {
-                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/marqdown.js/baseline.js ./checkbox.io-micro-preview/marqdown.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/${item['mutation']['renderer']}/baseline.js ./${item['mutation']['microservice']}/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
                                 console.log(`\nMutating microservice renderer`);
-                                console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node mutation.js ./checkbox.io-micro-preview/marqdown.js ./checkbox.io-micro-preview/marqdown.js 2>&1"`, {stdio: 'pipe'}).toString()); // TODO: dynamic - mutation - marqdown.js - checkbox.io-micro-preview
+                                console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node ${item['mutation']['driver']} ./${item['mutation']['microservice']}/${item['mutation']['renderer']} ./${item['mutation']['microservice']}/${item['mutation']['renderer']} 2>&1"`, {stdio: 'pipe'}).toString());
                             }
-                            require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd checkbox.io-micro-preview/ && node index.js"`); // TODO: dynamic - checkbox.io-micro-preview
+                            require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ${item['mutation']['microservice']}/ && node index.js"`);
                             for await (const snapshot of item['mutation']['snapshots']) {
                                 if (i == 0) {
                                     console.log(`Generating initial baseline snapshot of ${snapshot.split('/').pop()}`);
@@ -136,7 +139,7 @@ exports.handler = async argv => {
                             continue;
                         }
                         if (i >= 1) {
-                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr ./checkbox.io-micro-preview/marqdown.js .mutations/marqdown.js/${i}.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
+                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr ./${item['mutation']['microservice']}/${item['mutation']['renderer']} .mutations/${item['mutation']['renderer']}/${i}.js"`, {stdio: 'pipe'});
                             try {
                                 for await (const snapshot of item['mutation']['snapshots']) {
                                     console.log(`Comparing ${snapshot.split('/').pop()}/${i} with ${snapshot.split('/').pop()}/baseline`);
