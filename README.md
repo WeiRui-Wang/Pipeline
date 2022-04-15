@@ -6,6 +6,7 @@
 - [M2 Report](#m2-report)
 - [M2 Commands](#m2-commands)
 - [M2 Screencast](#m2-screencast)
+- [`.env` File Format](#env-file-format)
 
 ### M2 Project Overview
 
@@ -16,7 +17,7 @@
 ### M2 Commands
 
 ### M2 Screencast
-_______________________________________________________________________________________________________________________________-
+
 
 # Project M1 - Pipelines
 
