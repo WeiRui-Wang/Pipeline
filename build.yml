@@ -1,24 +1,5 @@
 setup:
-#   apt:
-#     - npm
-#     - wget
-#     - curl
-#     - maven
-#     - gnupg
-#     - nodejs
-#     - lsb-release
-#     - mysql-server
-#     - openjdk-11-jdk
-#     - ca-certificates
-#     - libatk-bridge2.0-0
-#     - fonts-liberation
-#     - libgbm-dev
-#     - gconf-service
-#     - libatk1.0-0
-#     - libxkbcommon-x11-0
-#     - libxdamage1
-#     - libpangocairo-1.0-0
-    
+  apt:
 #    - npm
 #    - wget
 #    - curl
@@ -37,10 +18,14 @@ jobs:
         rebuild: false
       - name: Install microservice module
         run: cd checkbox.io-micro-preview/ && npm install
+      - name: Save microservice baseline
+        run: cp ./checkbox.io-micro-preview/marqdown.js ./
+        rebuild: true
+      - name: Preparing mutations directory
+        run: mkdir -p .mutations/marqdown.js
+        rebuild: true
       - name: Preparing mutation.js module
         run: cp /bakerx/commands/mutation.js ./
-      - name: Preparing mutate.js module
-        run: cp /bakerx/commands/mutate.js ./
       - name: Preparing mutate module
         run: cp /bakerx/package.json ./
       - name: Install mutate module

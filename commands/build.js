@@ -21,9 +21,9 @@ exports.handler = async argv => {
         return;
     }
     console.log(chalk.green(`Building environment for ${jobName} with ${buildYml}...`));
-    let env = envfile.parseFileSync(envFilePath);
+    let env = await envfile.parseFileSync(envFilePath);
     const ymlFilePath = path.join(path.dirname(require.main.filename), buildYml);
-    const envVar = envfile.parseFileSync(envFilePath);
+    const envVar = await envfile.parseFileSync(envFilePath);
     let rebuilding = false;
     if (envVar.init != 'true') {
         console.log(`one or more items within build jobs list has led to inconsistency within build environment, rerun ${chalk.inverse('init')} and follow defined YAML standard in the document to resolve the issue`);
@@ -103,14 +103,54 @@ exports.handler = async argv => {
                     item['mutation']['iterations'].length;
                     item['mutation']['snapshots'].length;
                     const iterations = await item['mutation']['iterations'];
-                    for await (const snapshot of item['mutation']['snapshots']) {
-                        console.log(`${snapshot.split('/').pop()}`);
-                        for (let i = 1; i <= iterations; i++) {
+                    let passed = 0;
+                    let fails = 0;
+                    let i = 0;
+                    while (i <= iterations) {
+                        let failed = true;
+                        try {
+                            if (i == 0) {
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "mkdir -p .mutations/marqdown.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -rf ./checkbox.io-micro-preview/marqdown.js .mutations/marqdown.js/baseline.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
+                            } else {
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/marqdown.js/baseline.js ./checkbox.io-micro-preview/marqdown.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
+                                console.log(`Mutating microservice renderer`);
+                                console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node mutation.js ./checkbox.io-micro-preview/marqdown.js ./checkbox.io-micro-preview/marqdown.js 2>&1"`, {stdio: 'pipe'}).toString()); // TODO: dynamic - mutation.js - marqdown.js - checkbox.io-micro-preview
+                            }
+                            require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd checkbox.io-micro-preview/ && node index.js"`); // TODO: dynamic - checkbox.io-micro-preview
+                            for await (const snapshot of item['mutation']['snapshots']) {
+                                if (i == 0) {
+                                    console.log(`Generating initial baseline snapshot of ${snapshot.split('/').pop()}`);
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'mkdir -p .mutations/${snapshot.split('/').pop()}'`, {stdio: 'pipe'});
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "curl ${snapshot} --retry-connrefused --retry 2 > .mutations/${snapshot.split('/').pop()}/baseline.html"`, {stdio: 'pipe'});
+                                } else {
+                                    console.log(`Generating snapshot of ${snapshot.split('/').pop()}`);
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "curl ${snapshot} --retry-connrefused --retry 2 > .mutations/${snapshot.split('/').pop()}/${i}.html"`, {stdio: 'pipe'});
+                                }
+                            }
+                            failed = true;
+                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "pkill -f node"`, {stdio: 'pipe'});
+                        } catch (e) {
+                            console.log(chalk.red("Error for mutant occurred.\nCurrent iteration result and run was excluded from the calculation."));
+                            console.log(`passed: ${chalk.green(passed)}, fails: ${chalk.red(fails)}\n`);
+                            continue;
                         }
+                        if (i >= 1) {
+                            try {
+                                for await (const snapshot of item['mutation']['snapshots']) {
+                                    console.log(`Comparing ${snapshot.split('/').pop()}/${i} with ${snapshot.split('/').pop()}/baseline`);
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "diff .mutations/${snapshot.split('/').pop()}/baseline.html .mutations/${snapshot.split('/').pop()}/${i}.html"`, {stdio: 'pipe'});
+                                }
+                                failed = false;
+                            } catch (e) {
+                                console.log(e.stdout.toString());
+                                failed = true;
+                            }
+                        }
+                        i++;
+                        !failed ? passed++ : fails++;
+                        console.log(`passed: ${chalk.green(passed)}, fails: ${chalk.red(fails)}\n`);
                     }
-                    // console.log(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone 2>&1'`);
-                    // console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null 'git clone ${url} 2>&1'`, {stdio: 'pipe'}).toString());
-                    // console.log(iterations);
                 }
                 break;
             }
