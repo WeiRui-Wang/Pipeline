@@ -10,7 +10,9 @@
 
 ### M2 Project Overview
 
-The goal of the analysis is to calculate the mutation coverage of a test suite. For M2 milestone, all previous capability of M1 were retained and module was expanded based on M1. [`.env` File Format](#env-file-format) standard as describe in M1 documentation is still applicable.
+The goal of the analysis is to calculate the mutation coverage of a test suite. For mutation coverage with snapshot testing, our M2 implementation will be utilizing [Checkbox Marqdown Microservice](https://github.com/chrisparnin/checkbox.io-micro-preview) module to render and facilitate difference comparison.
+
+For M2 milestone, all previous capability of M1 were retained and module was expanded based on M1. [`.env` File Format](#env-file-format) standard as describe in M1 documentation is still applicable.
 
 ### M2 Mutation Coverage Approach
 
