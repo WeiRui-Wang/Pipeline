@@ -158,6 +158,12 @@ exports.handler = async argv => {
                         !failed ? passed++ : fails++;
                         console.log(`passed: ${chalk.green(passed)}, fails: ${chalk.red(fails)}\n`);
                     }
+                    try {
+                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/ /bakerx/"`, {stdio: 'pipe'});
+                        console.log(`mutated drivers and rendered results can be found in ./mutations folder`);
+                    } catch (e) {
+                        console.log(`mutated drivers and rendered results can be found in ./mutations within the virtual machine`);
+                    }
                     let mutationCoverage = ((fails / (fails + passed)) * 100).toFixed(2);
                     console.log(`mutation coverage: ${mutationCoverage}% [${fails}/${fails + passed}]\n`);
                 }

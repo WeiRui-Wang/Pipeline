@@ -20,8 +20,10 @@ jobs:
         run: cd checkbox.io-micro-preview/ && npm install
       - name: Preparing mutation driver
         run: cp /bakerx/drivers/mutation ./mutation.js
+        rebuild: true
       - name: Preparing mutation module
         run: cp /bakerx/package.json ./
+        rebuild: true
       - name: Install mutate module
         run: npm install
     mutation:
