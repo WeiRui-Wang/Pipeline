@@ -10,6 +10,8 @@
 
 ### M2 Project Overview
 
+The goal of the analysis is to calculate the mutation coverage of a test suite. For M2 milestone, all previous capability of M1 were retained and module was expanded based on M1. [`.env` File Format](#env-file-format) standard as describe in M1 documentation is still applicable.
+
 ### M2 Mutation Coverage Approach
 
 ### M2 Report
