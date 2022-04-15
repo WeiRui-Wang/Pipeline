@@ -118,7 +118,7 @@ Solution: Create .env file
 
 
 
-### Available Commands For Running
+### Available Commands
 ```
 npm install
 npm link
