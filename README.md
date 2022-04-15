@@ -26,7 +26,7 @@ Major changes are listed as follow:
 * For an `mutation`, `microservice`, `renderer`, `driver`, `iterations`, and list of `snapshots` are **mandatory**.
 * `microservice` is the name of microservice module folder that is used for rendering. `steps` will runs first to setup for all necessary to facilitate the use within the VM.
 * `renderer` is the name of key components that is used by the microservice module, which will be modified by `driver` to allows the testing of mutational coverage.
-* `driver` is the name of the **node** module `*.js` file without postfix, as defined in `steps` that resided in `/drivers/` folder, to facilitate the mutation of the `renderer`.
+* `driver` is the name of the **node** module `*.js` file without postfix, as defined in `steps` that hithertoly resided in [`/drivers/`](/drivers/) folder, to facilitate the mutation of the `renderer`.
 * `iterations` is the number of iterations of **comparable** mutations modification in total that the mutational coverage module should be ran.
 * `snapshots` is the list that consists of the target test suites to be rendered for each of the mutational coverage iteration.
 
