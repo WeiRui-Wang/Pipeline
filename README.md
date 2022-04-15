@@ -17,23 +17,44 @@ For M2 milestone, all previous capability of M1 were retained and module was exp
 
 ### M2 Build Job Specification
 
-In additional to the previously defined [M1 Build Job Specification](#build-job-specification) for M1, the new feature capability introduced new standards for how `build.yml` defined.
+In additional to the previously defined [M1 Build Job Specification](#build-job-specification) for M1, the new feature capability introduced new standards for how `build.yml` is defined.
 
 ### M2 Mutation Coverage Approach
+Mutation operators considered:
+
+    Conditional boundary mutations: > => >=, < => <=
+    Incremental mutations: ++j =>j++, i++ => i--
+    Negate conditionals: == => !=, > => <
+    Mutate control flow if => else if
+    Conditional expression mutation && => ||, || => &&
+    Clone return, early Find: return embeddedHtml;, copy and insert in random location of function (before declaration).
+    Non-empty string: "" => "<div>Bug</div>".
+    Constant Replacement: 0 => 3
 
 ### M2 Report
+|Issue| Description|Resolution|
+|---|---|---|
+|Understanding microservice|   | 
+|Understanding and orchestrating the different components of the project including markdown file, build file, and mutation |  | 
+|Updating the build.yml file |  | 
+|Updating the parser | | 
+|Creating mutation.js | |
+|Test harness| |
 
 ### M2 Commands
 
 To run and execute newly implemented M2 module, clone the current repository and locate into the repository folder and run the following commands in sequence.
 ```
 npm install
+npm link
+
 pipeline init
 pipeline build mutation-coverage build.yml
 ```
-Notes: all previous M1 feature were still compatible. Refers to [Available Commands](#available-commands) for details of M1 features and compatible commands.
+Notes: all previous M1 features are still compatible. Refer to [Available Commands](#available-commands) for details of M1 features and compatible commands.
 
 ### M2 Screencast
+[Project M2 - Screencast]()
 
 
 # Project M1 - Pipelines
