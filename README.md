@@ -26,7 +26,7 @@
 - [Build Job Specification](#build-job-specification)
 - [`.env` File Format](#env-file-format)
 - [Screencast](#screencast)
-- [Report](#report)
+- [Report](#Checkpoint-Report)
 - [Commands](#available-commands)
 
 
