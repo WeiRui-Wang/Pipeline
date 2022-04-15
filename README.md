@@ -26,7 +26,7 @@ npm install
 pipeline init
 pipeline build mutation-coverage build.yml
 ```
-Notes: all previous M1 feature were still compatible. Refers to [Commands](#available-commands) for details of M1 features and compatible commands.
+Notes: all previous M1 feature were still compatible. Refers to [Available Commands](#available-commands) for details of M1 features and compatible commands.
 
 ### M2 Screencast
 
