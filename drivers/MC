@@ -1,6 +1,6 @@
 const fs = require("fs");
 const chalk = require('chalk');
-const mutate = require('./mutation.js');
+const mutate = require('./mutation');
 const exec = require('child_process').execSync;
 
 

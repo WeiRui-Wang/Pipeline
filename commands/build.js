@@ -102,7 +102,8 @@ exports.handler = async argv => {
                 if (typeof item['mutation'] !== "undefined") {
                     item['mutation']['iterations'].length;
                     item['mutation']['snapshots'].length;
-                    const iterations = await item['mutation']['iterations'];
+                    // const iterations = await item['mutation']['iterations'];
+                    const iterations = 5;
                     let passed = 0;
                     let fails = 0;
                     let i = 0;
@@ -114,8 +115,8 @@ exports.handler = async argv => {
                                 await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -rf ./checkbox.io-micro-preview/marqdown.js .mutations/marqdown.js/baseline.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
                             } else {
                                 await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/marqdown.js/baseline.js ./checkbox.io-micro-preview/marqdown.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
-                                console.log(`Mutating microservice renderer`);
-                                console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node mutation.js ./checkbox.io-micro-preview/marqdown.js ./checkbox.io-micro-preview/marqdown.js 2>&1"`, {stdio: 'pipe'}).toString()); // TODO: dynamic - mutation.js - marqdown.js - checkbox.io-micro-preview
+                                console.log(`\nMutating microservice renderer`);
+                                console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node mutation.js ./checkbox.io-micro-preview/marqdown.js ./checkbox.io-micro-preview/marqdown.js 2>&1"`, {stdio: 'pipe'}).toString()); // TODO: dynamic - mutation - marqdown.js - checkbox.io-micro-preview
                             }
                             require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd checkbox.io-micro-preview/ && node index.js"`); // TODO: dynamic - checkbox.io-micro-preview
                             for await (const snapshot of item['mutation']['snapshots']) {
@@ -131,26 +132,34 @@ exports.handler = async argv => {
                             failed = true;
                             await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "pkill -f node"`, {stdio: 'pipe'});
                         } catch (e) {
-                            console.log(chalk.red("Error for mutant occurred.\nCurrent iteration result and run was excluded from the calculation."));
+                            console.log(chalk.red("Error for mutant occurred.\nCurrent iteration result and run was excluded from the calculation.\n"));
                             console.log(`passed: ${chalk.green(passed)}, fails: ${chalk.red(fails)}\n`);
                             continue;
                         }
                         if (i >= 1) {
+                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr ./checkbox.io-micro-preview/marqdown.js .mutations/marqdown.js/${i}.js"`, {stdio: 'pipe'}); // TODO: dynamic - marqdown.js - checkbox.io-micro-preview
                             try {
                                 for await (const snapshot of item['mutation']['snapshots']) {
                                     console.log(`Comparing ${snapshot.split('/').pop()}/${i} with ${snapshot.split('/').pop()}/baseline`);
                                     await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "diff .mutations/${snapshot.split('/').pop()}/baseline.html .mutations/${snapshot.split('/').pop()}/${i}.html"`, {stdio: 'pipe'});
                                 }
+                                console.log("No difference found for rendered results of current mutation iteration.\nCurrent mutation passed.");
                                 failed = false;
                             } catch (e) {
                                 console.log(e.stdout.toString());
+                                console.log("Differences were found for one or more rendered test suites of current mutation iteration.\n");
                                 failed = true;
                             }
+                        } else {
+                            i++;
+                            continue;
                         }
                         i++;
                         !failed ? passed++ : fails++;
                         console.log(`passed: ${chalk.green(passed)}, fails: ${chalk.red(fails)}\n`);
                     }
+                    let mutationCoverage = ((fails / (fails + passed)) * 100).toFixed(2);
+                    console.log(`mutation coverage: ${mutationCoverage}% [${fails}/${fails + passed}]\n`);
                 }
                 break;
             }

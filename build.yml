@@ -1,15 +1,15 @@
 setup:
   apt:
-#    - npm
-#    - wget
-#    - curl
-#    - maven
-#    - gnupg
-#    - nodejs
-#    - lsb-release
-#    - mysql-server
-#    - openjdk-11-jdk
-#    - ca-certificates
+    - npm
+    - wget
+    - curl
+    - maven
+    - gnupg
+    - nodejs
+    - lsb-release
+    - mysql-server
+    - openjdk-11-jdk
+    - ca-certificates
 jobs:
   - name: mutation-coverage
     steps:
@@ -18,15 +18,9 @@ jobs:
         rebuild: false
       - name: Install microservice module
         run: cd checkbox.io-micro-preview/ && npm install
-      - name: Save microservice baseline
-        run: cp ./checkbox.io-micro-preview/marqdown.js ./
-        rebuild: true
-      - name: Preparing mutations directory
-        run: mkdir -p .mutations/marqdown.js
-        rebuild: true
-      - name: Preparing mutation.js module
-        run: cp /bakerx/commands/mutation.js ./
-      - name: Preparing mutate module
+      - name: Preparing mutation driver
+        run: cp /bakerx/drivers/mutation ./mutation.js
+      - name: Preparing mutation module
         run: cp /bakerx/package.json ./
       - name: Install mutate module
         run: npm install
