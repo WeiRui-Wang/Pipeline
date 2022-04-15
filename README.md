@@ -17,7 +17,48 @@ For M2 milestone, all previous capability of M1 were retained and module was exp
 
 ### M2 Build Job Specification
 
-In additional to the previously defined [M1 Build Job Specification](#build-job-specification) for M1, the new feature capability introduced new standards for how `build.yml` is defined.
+In addition to maintaining the previously defined compatible build job specification for M1, the new feature capability introduced new standards for how current M2's iteration of [`build.yml`](build.yml) is defined.
+
+Major changes are listed as follow:
+* As part of the new job specification added as shown in the following snippet, for `mutation-coverage`, the existing feature of interpreting `steps` are still compatiable.
+* As shown below, for `mutation-coverage`, basic structure setup is necessary to construct an environment such that are compatible with the newly implemented mutation coverage feature.
+* For all job, an **optional** `mutation` can be used to configure the mutational coverage properties.
+* For an `mutation`, `microservice`, `renderer`, `driver`, `iterations`, and list of `snapshots` are **mandatory**.
+* `microservice` is the name of microservice module folder that is used for rendering. `steps` will runs first to setup for all necessary to facilitate the use within the VM.
+* `renderer` is the name of key components that is used by the microservice module, which will be modified by `driver` to allows the testing of mutational coverage.
+* `driver` is the name of the **node** module `*.js` file without postfix, as defined in `steps` that resided in `/drivers/` folder, to facilitate the mutation of the `renderer`.
+* `iterations` is the number of iterations of **comparable** mutations modification in total that the mutational coverage module should be ran.
+* `snapshots` is the list that consists of the target test suites to be rendered for each of the mutational coverage iteration.
+
+```
+  - name: mutation-coverage
+    steps:
+      - name: Check out microservice module
+        run: git clone https://github.com/chrisparnin/checkbox.io-micro-preview.git
+        rebuild: false
+      - name: Install microservice module
+        run: cd checkbox.io-micro-preview/ && npm install
+      - name: Preparing mutation driver
+        run: cp /bakerx/drivers/mutation ./mutation.js
+        rebuild: true
+      - name: Preparing mutation module
+        run: cp /bakerx/package.json ./
+        rebuild: true
+      - name: Install mutate module
+        run: npm install
+    mutation:
+      microservice: checkbox.io-micro-preview
+      renderer: marqdown.js
+      driver: mutation.js
+      iterations: 1000
+      snapshots:
+        - http://localhost:3000/survey/long.md
+        - http://localhost:3000/survey/upload.md
+        - http://localhost:3000/survey/survey.md
+        - http://localhost:3000/survey/variations.md
+```
+
+Keep in mind, `steps` is a globally usable and **mandatory** for each of the build job, even if the property can be empty, the `steps` property is still mandatory to be in place as defined by previous iteration of implementation [M1 Build Job Specification](#build-job-specification) for M1.
 
 ### M2 Mutation Coverage Approach
 Mutation operators considered:
