@@ -22,13 +22,17 @@ var buf = fs.readFileSync(filepath, "utf8");
         fs.writeFileSync( newPath, code);
     }
     else if (ind==7){
-        await ChangeFlow(filepath,newPath);
+        if (getRandomInt(10)<5){
+            await ChangeFlow(filepath,newPath);
+        }
+        else{
+            ChangeFlow2(ast,filepath,newPath);
+        }
     }
     else if (ind==6){
         EarlyReturn(ast,filepath,newPath);
     }
-        
-    
+    // console.log(valid);
 }
 exports.rewrite = rewrite;
 
@@ -223,6 +227,29 @@ async function ChangeFlow(filepath,newPath) {
     console.log( chalk.red(`Change the No.${i} occurence of else if into if.` ));
 }
 
+function ChangeFlow2(ast,filepath,newPath) {
+    let nothing=0;
+    traverseWithParents(ast, (node) => {
+        nothing=1; //placeholder
+    })
+    if(all.length!=0 && valid.length!=0){
+        let i = getRandomInt(valid.length);
+        var data = fs.readFileSync(filepath).toString().split("\n");
+        data[valid[i]-1] = data[valid[i]-1].replace('if','else if')
+
+        var text = data.join("\n");
+        fs.writeFile(newPath, text, function (err) {
+            if (err) return console.log(err);
+          });
+        // let j = all.indexOf(valid[i])+1;
+
+        // await exec(`sed 's/if/else if/${j}' ${filepath} > ${newPath}`);
+        console.log( chalk.red(`Change if into else if on line ${valid[i]}.` ));
+    }
+    
+}
+
+
 
 async function EarlyReturn(ast,filepath,newPath){
     let candidates = 0;
@@ -241,7 +268,7 @@ async function EarlyReturn(ast,filepath,newPath){
                 start = node.loc.start.line
                 end = node.loc.end.line
                 loc = node.range
-                console.log(node.loc.start.line, node.loc.end.line);
+                // console.log(node.loc.start.line, node.loc.end.line);
             }
             current++;
         }
@@ -266,22 +293,24 @@ async function EarlyReturn(ast,filepath,newPath){
     // let text = exec(`head -${end} ${filepath} | tail +${start}`);
     await exec1(`head -${end} ${filepath} | tail +${start}`, async function(error, stdout, stderr){
         var text = String(stdout);
-        console.log(insert_ind,text);
+        // console.log(insert_ind,text);
         var data = fs.readFileSync(filepath).toString().split("\n");
         data.splice(insert_ind, 0, text);
         var text = data.join("\n");
+        console.log( chalk.red(`Early clone return statement on line ${insert_ind+1}.` ));
         fs.writeFile(newPath, text, function (err) {
             if (err) return console.log(err);
           });
         // console.log(`sed '${insert_ind} i ${text}' ${filepath} > ${newPath}`);
         // console.log(await exec(`sed '${insert_ind} i ${text}' ${filepath} | tee ${newPath} `).toString())
     });
-    console.log("ddd")
     // await exec(`sed '${insert_ind} i ${text}' ${filepath} > ${newPath}`);
     // console.log(`sed '${insert_ind} i ${text}' ${filepath} > ${newPath}`)
 };
 
 var arg = process.argv.slice(2);
+var all=[];
+var valid=[];
 rewrite(arg[0],arg[1]);
 
 
@@ -296,8 +325,29 @@ function traverseWithParents(object, visitor)
     var key, child;
 
     visitor.call(null, object);
-
+    var can = 0;
     for (key in object) {
+        if (key!="parent" && object[key]!=undefined){
+            if(object[key].hasOwnProperty("type")){
+                if(object[key]['type']=="IfStatement"){
+                                // console.log(object[key].loc.start.line);
+                    if(!all.includes(object[key].loc.start.line)){
+                        all.push(object[key].loc.start.line)
+                    }            
+                    if(can==1){
+                        if (!valid.includes(object[key].loc.start.line)){
+                            valid.push(object[key].loc.start.line)
+                        }
+                                    
+                    }
+                    can =1
+                }
+                else{
+                    can=0;
+                }
+            }
+            
+        };
         if (object.hasOwnProperty(key)) {
             child = object[key];
             if (typeof child === 'object' && child !== null && key != 'parent') 
