@@ -7,13 +7,13 @@
 - [M2 Report](#m2-report)
 - [M2 Commands](#m2-commands)
 - [M2 Screencast](#m2-screencast)
-- [`.env` File Format](#env-file-format)
+- [M2 `.env` File Format](#m2-env-file-format)
 
 ### M2 Project Overview
 
 The goal of the analysis is to calculate the mutation coverage of a test suite. For mutation coverage with snapshot testing, our M2 implementation will be utilizing [Checkbox Marqdown Microservice](https://github.com/chrisparnin/checkbox.io-micro-preview) module to render and facilitate difference comparison.
 
-For M2 milestone, all previous capability of M1 were retained and module was expanded based on M1. [`.env` File Format](#env-file-format) standard as describe in M1 documentation is still applicable.
+For M2 milestone, all previous capability of M1 were retained and module was expanded based on M1. Further adaptation and modification was in place to ensure capability.
 
 ### M2 Build Job Specification
 
@@ -122,6 +122,9 @@ Notes: all previous M1 features are still compatible. Refer to [Available Comman
 
 [Project M2 - Screencast]()
 
+### M2 `.env` File Format
+
+For M2, M1-based standard [`.env` File Format](#env-file-format) as describe in M1 documentation is still applicable. Additionally, `build.js` modules has adapted new changes that is automatic for environment tracking.
 
 # Project M1 - Pipelines
 
