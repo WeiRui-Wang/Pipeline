@@ -107,13 +107,20 @@ exports.handler = async argv => {
                     while (i <= iterations) {
                         let failed = true;
                         try {
-                            if (i == 0) {
-                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "mkdir -p .mutations/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
-                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -rf ./${item['mutation']['microservice']}/${item['mutation']['renderer']} .mutations/${item['mutation']['renderer']}/baseline.js"`, {stdio: 'pipe'});
-                            } else {
-                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/${item['mutation']['renderer']}/baseline.js ./${item['mutation']['microservice']}/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
-                                console.log(`\nMutating microservice renderer`);
-                                console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node ${item['mutation']['driver']} ./${item['mutation']['microservice']}/${item['mutation']['renderer']} ./${item['mutation']['microservice']}/${item['mutation']['renderer']} 2>&1"`, {stdio: 'pipe'}).toString());
+                            try {
+                                if (i == 0) {
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "mkdir -p .mutations/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -rf ./${item['mutation']['microservice']}/${item['mutation']['renderer']} .mutations/${item['mutation']['renderer']}/baseline.js"`, {stdio: 'pipe'});
+                                } else {
+                                    await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/${item['mutation']['renderer']}/baseline.js ./${item['mutation']['microservice']}/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
+                                    console.log(`\nMutating microservice renderer`);
+                                    console.log(await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "node ${item['mutation']['driver']} ./${item['mutation']['microservice']}/${item['mutation']['renderer']} ./${item['mutation']['microservice']}/${item['mutation']['renderer']} 2>&1"`, {stdio: 'pipe'}).toString());
+                                }
+                            } catch (e) {
+                                envVar.init = false;
+                                fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
+                                console.log(chalk.inverse(`please ensure steps and mutation components identified from '${jobName}' of ${buildYml} are present and valid`));
+                                return;
                             }
                             require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ${item['mutation']['microservice']}/ && node index.js"`);
                             for await (const snapshot of item['mutation']['snapshots']) {
