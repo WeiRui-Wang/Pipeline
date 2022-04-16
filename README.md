@@ -101,7 +101,7 @@ The mutation coverage is calculated by: failed cases per mutation / total number
 
 ### M2 Commands
 
-To run and execute newly implemented M2 module, clone the current repository and locate into the repository folder and run the following commands in sequence.
+To run and execute newly implemented M2 module, clone the current repository and locate into the repository folder and run the following commands in sequence. Before running the following commands, be sure to use [`.env` File Template](.env.template) to create `.env` file in the same directory of the local repository folder.
 ```
 npm install
 npm link
