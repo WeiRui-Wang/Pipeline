@@ -19,9 +19,12 @@ exports.handler = async argv => {
     await exec('sh commands/init.sh', (error, stdout) => {
         console.log(chalk.inverse(stdout));
         let env = envfile.parseFileSync(envFilePath);
-        env.CONNECTION_INFORMATION = stdout.replace(/[\n]$/, '');
-        env.rebuildable = false;
-        env.init = true;
-        fs.writeFileSync(envFilePath, envfile.stringifySync(env));
+        let newEnv = {};
+        newEnv.TOKEN = env['TOKEN'];
+        newEnv.MYSQL_PW = env['MYSQL_PW'];
+        newEnv.CONNECTION_INFORMATION = stdout.replace(/[\n]$/, '');
+        newEnv.rebuildable = false;
+        newEnv.init = true;
+        fs.writeFileSync(envFilePath, envfile.stringifySync(newEnv), {flag: 'w+'});
     })
 };
