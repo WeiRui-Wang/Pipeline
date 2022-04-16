@@ -62,40 +62,41 @@ Keep in mind, `steps` is a globally usable and **mandatory** for each of the bui
 
 ### M2 Mutation Coverage Approach
 
-#### Mutation Operators (30%)
+#### Mutation Operators 
 Mutation operators considered in `mutation` with the indicated examples can be found in the following functions. Each mutation is randomly picked within `mutation`:
 
 * Function ChangeBoundary: `> => >=, < => <=`
 * Function FlipIncremental: `++j =>j++, i++ => i--`
 * Function NegateConditions:`== => !=, > => <`
-* Function ChangeFlow: `if => else if`
+* Function ChangeFlow: `if`
 * Function ChangeConExp: `&& => ||, || => &&`
 * Function EarlyReturn: `return embedded Html, copy and insert in random location of function (before declaration)`
 * Function EmptyString:`"=> "<div>Bug</div>"`
 * Function ChangeConst:`0 => 3`
     
-#### Test Hardness (30%) 
+#### Test Hardness 
 The test hardness implemented allos for 
 * Start with original version of markdown
 * Apply a random mutation operator
 * Run a microservice with mutated code
 * Compare snapshots to determine any difference 
 
-#### Mutation Coverage & Snapshot differencing (20%)
+#### Mutation Coverage & Snapshot differencing 
 Test hardness used to generate 1000 random mutations from `mutation` per markdown file being tested (long.md, survey.md, upload.md, variations.md)
 
 The mutation coverage is calculated by: failed cases per mutation / total number of mutations.
 
 
 ### M2 Report 
-(Part of 20%)
+
 |Issue| Description|Resolution|
 |---|---|---|
 |Understanding microservice| As part of the M2 assignment, it was important to understand what concepts of the class were applicable. It was important to understand the structure and function of system being tested which was microservice.  | Each member tested microservice and compared it to the fuzzing workshop completed during class. 
-|Understanding and orchestrating the different components of the project |  Collaboration within the team to understand how M1 components (parser, build, and VM) would all interact to work with mutations and microservice components.| Determined that the local host would include the updated build.yml file that includes the mutation-coverage job and steps, a a build.js that calls a mutation file, catch errors and return mutation coverage, and a mutation file that implements all the mutations being considered. Within the VM, a clone of checkbox-io (markdown) and clone of the screenshot repo with all dependencies is to occur. The markdown file is to be mutated, screenshot captured and service ended for as many iteraions as indicated in the host build.yml file. 
-|Updating the build.yml file | Considered what information had to be added or updated to the build.yml file from M1 to work with M2 realted work | updated build.yml to include mutation-coverage job with steps to clone and install microservice, prepare and install components for the mutation driver and provide specific information for the mutation itself with the renderer, driver, iterations and markdown files to be tested. 
-|Implementing mutations | Determine what mutations had to be implemented, where to call them within the host machine and how to apply them to the files being tested | `mutation` was implemented to account for all the different types of mutations expected, a total of 1000 mutations are applied. one mutation out of all the available ones is randomly applied to the file being tested. 
-|Test harness| The final test required that the mutations are applied, recognized and tracked. A final mutation coverage had to be calculated at the end via any test case fails for mutant ) / (total number of mutations)  | Implementation required for all the previous components to be completed and working properly. Various runtime errors developed which made it hard to determine what was considered a failed mutation vs issues with runtime. A try-catch approach was implemented to filter out the cases considered as failed test cases due to mutation or other issues related to runtime. 
+|Understanding and orchestrating the different components of the project |  Collaboration within the team to understand how M1 components (parser, build, and VM) would all interact to work with mutations and microservice components.| Determined that the local host would include the updated build.yml file that includes the mutation-coverage job and steps, a build.js that calls a mutation file, catch errors and return mutation coverage, and a mutation file that implements all the mutations being considered. Within the VM, a clone of checkbox-io (markdown) and clone of the screenshot repo with all dependencies is to occur. The original markdown file is to be mutated, screenshot captured and service ended for as many iteraions as indicated in the host build.yml file. 
+|Updating the build.yml file | Considered what information had to be added or updated to the build.yml file from M1 to work with M2 related work | updated build.yml to include mutation-coverage job with steps to clone and install microservice, prepare and install components for the mutation driver and provide specific information for the mutation itself with the renderer, driver, iterations and markdown files to be tested. 
+|Implementing mutations | Determine what mutations had to be implemented, where to call them within the host machine and how to apply them to the files being tested | `mutation` was implemented to account for all the different types of mutations expected (as listed in mutation operators), a total of 1000 mutations are applied. One mutation out of all the available ones is randomly applied to the file being tested. 
+|Test harness| The final test required that the mutations are applied, recognized and tracked. A final mutation coverage had to be calculated at the end such as mutation coverage = (any test case fails for mutant ) / (total number of mutations)  | Implementation required for all the previous components had to be completed and working properly. Various runtime errors developed which made it hard to determine what was considered a failed mutation vs issues with runtime. A try-catch approach was implemented to filter out the cases considered as failed test cases due to mutation or other issues related to runtime. 
+|Repo restructuring & Debugging | Various issues developed while trying to incoorporate all the new components to the original structure of M1. There were issues trying to automate the proccess of mutation, screenshot and comparison.  | Issue descriptions can be found in issue [#32](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/issues/32), the issues were investigated and handled. To integrate the new components for M2, a drivers folder had to be added which included files MC, mutation, and parser which all handle the mutations. 
 
 ### M2 Commands
 
@@ -107,10 +108,18 @@ npm link
 pipeline init
 pipeline build mutation-coverage build.yml
 ```
+
+Other Compatible Commands
+```
+npm install
+node index.js init
+node index.js build itrust-build build.yml
+node index.js build mutation-coverage build.yml
+```
 Notes: all previous M1 features are still compatible. Refer to [Available Commands](#available-commands) for details of M1 features and compatible commands.
 
 ### M2 Screencast 
-(Part of 20%)
+
 [Project M2 - Screencast]()
 
 
