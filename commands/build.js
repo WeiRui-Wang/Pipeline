@@ -156,6 +156,7 @@ exports.handler = async argv => {
                         console.log(`passed: ${chalk.green(passed)}, fails: ${chalk.red(fails)}\n`);
                     }
                     try {
+                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/${item['mutation']['renderer']}/baseline.js ./${item['mutation']['microservice']}/${item['mutation']['renderer']}"`, {stdio: 'pipe'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr .mutations/ /bakerx/"`, {stdio: 'pipe'});
                         console.log(`mutated drivers and rendered results can be found in ./mutations folder`);
                     } catch (e) {
