@@ -30,7 +30,7 @@ jobs:
       microservice: checkbox.io-micro-preview
       renderer: marqdown.js
       driver: mutation.js
-      iterations: 1000
+      iterations: 1
       snapshots:
         - http://localhost:3000/survey/long.md
         - http://localhost:3000/survey/upload.md

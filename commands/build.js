@@ -69,6 +69,10 @@ exports.handler = async argv => {
                     envVar.rebuildable = false;
                     fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                 }
+                if (envVar.built === undefined) {
+                    envVar.built = jobName;
+                    fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
+                }
                 item['steps'].length;
                 for await (const step of item['steps']) {
                     step['name'].length;
@@ -169,10 +173,10 @@ exports.handler = async argv => {
                     let mutationCoverage = ((fails / (fails + passed)) * 100).toFixed(2);
                     console.log(`mutation coverage: ${mutationCoverage}% [${fails}/${fails + passed}]\n`);
                 }
-                break;
+                return;
             }
-            throw ``;
         }
+        throw ``;
     } catch (e) {
         console.log(chalk.inverse(`please ensure all external resources '${buildYml}', '${ymlFilePath}' or build job '${jobName}' exists and valid`));
     }
