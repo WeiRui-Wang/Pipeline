@@ -61,18 +61,33 @@ Major changes are listed as follow:
 Keep in mind, `steps` is a globally usable and **mandatory** for each of the build job, even if the property can be empty, the `steps` property is still mandatory to be in place as defined by previous iteration of implementation [M1 Build Job Specification](#build-job-specification) for M1.
 
 ### M2 Mutation Coverage Approach
-Mutation operators considered:
 
-    Conditional boundary mutations: > => >=, < => <=
-    Incremental mutations: ++j =>j++, i++ => i--
-    Negate conditionals: == => !=, > => <
-    Mutate control flow if => else if
-    Conditional expression mutation && => ||, || => &&
-    Clone return, early Find: return embeddedHtml;, copy and insert in random location of function (before declaration).
-    Non-empty string: "" => "<div>Bug</div>".
-    Constant Replacement: 0 => 3
+#### Mutation Operators (30%)
+Mutation operators considered in `mutation` with the indicated examples can be found in the following functions. Each mutation is randomly picked within `mutation`.:
 
-### M2 Report
+* Function ChangeBoundary: `> => >=, < => <=`
+* Function FlipIncremental: `++j =>j++, i++ => i--`
+* Function NegateConditions:`== => !=, > => <`
+* Function ChangeFlow: `if => else if`
+* Function ChangeConExp: `&& => ||, || => &&`
+* Function EarlyReturn: `return embedded Html, copy and insert in random location of function (before declaration)`
+* Function EmptyString:`"" => "<div>Bug</div>"`
+* Function ChangeConst:`0 => 3`
+    
+#### Test Hardness (30%) 
+The test hardness implemented allos for 
+* Start with original version of markdown
+* Apply a random mutation operator
+* Run a microservice with mutated code
+* Compare snapshots to determine any difference 
+
+#### Mutation Coverage & Snapshot differencing (20%)
+Test hardness used to generate 1000 random mutations from `mutation` per markdown file being tested (long.md, survey.md, upload.md, variations.md)
+
+The mutation coverage is calculated by: failed cases per mutation / total number of mutations.
+
+
+### M2 Report (Part of 20%)
 |Issue| Description|Resolution|
 |---|---|---|
 |Understanding microservice|   | 
@@ -94,7 +109,7 @@ pipeline build mutation-coverage build.yml
 ```
 Notes: all previous M1 features are still compatible. Refer to [Available Commands](#available-commands) for details of M1 features and compatible commands.
 
-### M2 Screencast
+### M2 Screencast (Part of 20%)
 [Project M2 - Screencast]()
 
 
