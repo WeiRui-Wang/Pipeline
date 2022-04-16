@@ -68,7 +68,7 @@ Mutation operators considered in `mutation` with the indicated examples can be f
 * Function ChangeBoundary: `> => >=, < => <=`
 * Function FlipIncremental: `++j =>j++, i++ => i--`
 * Function NegateConditions:`== => !=, > => <`
-* Function ChangeFlow: `if`
+* Function ChangeFlow: `if, else if`
 * Function ChangeConExp: `&& => ||, || => &&`
 * Function EarlyReturn: `return embedded Html, copy and insert in random location of function (before declaration)`
 * Function EmptyString:`"=> "<div>Bug</div>"`
