@@ -6,8 +6,9 @@
 - [M2 Mutation Coverage](#m2-mutation-coverage-approach)
 - [M2 Report](#m2-report)
 - [M2 Commands](#m2-commands)
-- [M2 Screencast](#m2-screencast)
 - [M2 `.env` File Format](#m2-env-file-format)
+- [M2 Screencast](#m2-screencast)
+
 
 ### M2 Project Overview
 
@@ -118,13 +119,13 @@ node index.js build mutation-coverage build.yml
 ```
 Notes: all previous M1 features are still compatible. Refer to [Available Commands](#available-commands) for details of M1 features and compatible commands.
 
-### M2 Screencast 
-
-[Project M2 - Screencast]()
-
 ### M2 `.env` File Format
 
 For M2, M1-based standard [`.env` File Format](#env-file-format) as describe in M1 documentation is still applicable. Additionally, `build.js` modules has adapted new changes that is automatic for environment tracking.
+
+### M2 Screencast 
+
+[Project M2 - Screencast]()
 
 # Project M1 - Pipelines
 
