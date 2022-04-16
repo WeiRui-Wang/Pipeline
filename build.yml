@@ -15,7 +15,6 @@ jobs:
     steps:
       - name: Check out microservice module
         run: git clone https://github.com/chrisparnin/checkbox.io-micro-preview.git
-        rebuild: false
       - name: Install microservice module
         run: cd checkbox.io-micro-preview/ && npm install
       - name: Preparing mutation driver
@@ -30,7 +29,7 @@ jobs:
       microservice: checkbox.io-micro-preview
       renderer: marqdown.js
       driver: mutation.js
-      iterations: 1
+      iterations: 1000
       snapshots:
         - http://localhost:3000/survey/long.md
         - http://localhost:3000/survey/upload.md

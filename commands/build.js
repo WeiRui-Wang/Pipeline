@@ -29,14 +29,14 @@ exports.handler = async argv => {
         console.log(`one or more items within build jobs list has led to inconsistency within build environment, rerun ${chalk.inverse('init')} and follow defined YAML standard in the document to resolve the issue`);
         return;
     }
-    if (envVar.rebuildable == 'true') {
+    if (envVar[`${jobName}_rebuildable`] == 'true') {
         rebuilding = true;
     }
     try {
         const doc = yaml.load(fs.readFileSync(ymlFilePath, 'utf8'));
         doc['jobs'].length;
         doc['setup'].length;
-        if (doc['setup']['apt'] != undefined && !rebuilding) {
+        if (doc['setup']['apt'] != undefined && !rebuilding && envVar[`rebuildable`] == 'false') {
             for await (const item of doc['setup']['apt']) {
                 console.log(`Installing ${item}...`);
                 try {
@@ -63,16 +63,6 @@ exports.handler = async argv => {
 
         for await (const item of doc['jobs']) {
             if (item['name'] === jobName) {
-                if (envVar.rebuildable == 'true' && (envVar.built === undefined || envVar.built != jobName)) {
-                    rebuilding = false;
-                    envVar.built = jobName;
-                    envVar.rebuildable = false;
-                    fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
-                }
-                if (envVar.built === undefined) {
-                    envVar.built = jobName;
-                    fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
-                }
                 item['steps'].length;
                 for await (const step of item['steps']) {
                     step['name'].length;
@@ -85,7 +75,8 @@ exports.handler = async argv => {
                             }
                         }
                         if (step['rebuild'] != undefined) {
-                            envVar.rebuildable = true;
+                            envVar[`rebuildable`] = true;
+                            envVar[`${jobName}_rebuildable`] = true;
                             fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                         }
                         if (rebuilding && (step['rebuild'] == undefined || step['rebuild'] == false)) {
@@ -95,7 +86,7 @@ exports.handler = async argv => {
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "${run} 2>&1"`, {stdio: 'inherit'});
                         console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
                     } catch (e) {
-                        if (!rebuilding && !envVar.rebuildable) {
+                        if (!rebuilding && !envVar[`${jobName}_rebuildable`]) {
                             envVar.init = false;
                             fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                         }
