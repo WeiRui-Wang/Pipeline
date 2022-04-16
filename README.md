@@ -105,7 +105,7 @@ To run and execute newly implemented M2 module, clone the current repository and
 
 To run the commands and test the module, use Windows with seted up Git Bash.
 
-All mutation comparable rendered results are save locally automatically in `.mutations` local folder which within the same directory of the local repository. An example of output in zip file can be found in [_mutations.zip](assets/_mutations.zip).
+All mutation comparable rendered results are save locally automatically in `.mutations` local folder which within the same directory of the local repository. An example of 1000 mutations of all 4 snapshots comparable output in zip file can be found in [_mutations.zip](assets/_mutations.zip).
 ```
 npm install
 npm link
