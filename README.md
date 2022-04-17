@@ -66,14 +66,14 @@ Keep in mind, `steps` is a globally usable and **mandatory** for each of the bui
 #### Mutation Operators 
 Mutation operators considered in `mutation` with the indicated examples can be found in the following functions. Each mutation is randomly picked within `mutation`:
 
-* Function ChangeBoundary: `> => >=, < => <=`
-* Function FlipIncremental: `++j =>j++, i++ => i--`
-* Function NegateConditions:`== => !=, > => <`
-* Function ChangeFlow: `if, else if`
-* Function ChangeConExp: `&& => ||, || => &&`
-* Function EarlyReturn: `return embedded Html, copy and insert in random location of function (before declaration)`
-* Function EmptyString:`"=> "<div>Bug</div>"`
-* Function ChangeConst:`0 => 3`
+* Function ChangeBoundary: `>` => `>=`, `<` => `<=`
+* Function FlipIncremental: `j++` <==> `j--`
+* Function NegateConditions:`==` <==> `!=`, `>` <==> `<`
+* Function ChangeFlow: `if` <==> `else if` (Note: only `if` statement preceded with another `if` can be mutated)
+* Function ChangeConExp: `&& <==> ||`
+* Function EarlyReturn: Copy and insert `return` statement in random location within its function (before declaration)
+* Function EmptyString:`"" => "<div>Bug</div>"`
+* Function ChangeConst: Randomly choose a constant and increment by 1: `c => c+1`
     
 #### Test Hardness 
 The test hardness implemented allos for 
