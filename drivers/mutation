@@ -221,7 +221,7 @@ function ChangeConst(ast) {
 
 
 async function ChangeFlow(filepath,newPath) {
-    const number  = await exec("grep -o 'else if' marqdown.js | wc -l")
+    const number  = await exec(`grep -o 'else if' ${filepath} | wc -l`)
     let i = getRandomInt(number)+1;
     await exec(`sed 's/else if/if/${i}' ${filepath} > ${newPath}`);
     console.log( chalk.red(`Change the No.${i} occurence of else if into if.` ));
