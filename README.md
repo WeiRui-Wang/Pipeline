@@ -38,17 +38,20 @@ Major changes are listed as follows:
   dynamic variable element, the variable such as `ip` can be parsed from `bakerx.yml` and use for reference and
   deployment job steps. Different from `env` option standard, `config` only contains a single variable instead of a list
   of dynamically parsable variables.
-* A mandatory boolean flag option `deploy` were also added to the build job specification to indicate the steps that
-  will be used for deployments with `deploy` module. _Note: `deploy` option is neither mandatory nor supported
-  in `build`
-  module. `deploy` and `rebuild` flag are mutually exclusive and for `deploy` to work properly the `deploy` should be
-  the only presence._
+* A mandatory boolean flag option `deploy` were also added to the yml job specification to indicate the steps that will
+  be used for deployments with `deploy` module only.
 
 ### F0 Flame Graph Feature
 
 ### F0 Report
 
 ### F0 Commands
+
+For defined yml, `deploy` option is neither mandatory nor supported in `build` module. `deploy` and `rebuild` flag are
+mutually exclusive and for `deploy` to work properly the `deploy` should be the only presence.
+
+Before running `deploy` module, ensure corresponding `post-receive` and `pre-commit` assets are presented
+in [assets](/assets) root folder under the name of the job name folder.
 
 ### F0 `.env` File Format
 
