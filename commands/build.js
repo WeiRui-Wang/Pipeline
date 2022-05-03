@@ -74,6 +74,11 @@ exports.handler = async argv => {
                                 run = run.replaceAll(`$${env.toString()}`, envVar[env]);
                             }
                         }
+                        if (step['config'] != undefined) {
+                            const configFilePath = path.join(path.dirname(require.main.filename), 'bakerx.yml');
+                            const configVar = await envfile.parseFileSync(configFilePath);
+                            run = run.replaceAll(`$${step['config'].toString()}`, configVar[step['config'].toString()]);
+                        }
                         if (step['rebuild'] != undefined) {
                             envVar[`rebuildable`] = true;
                             envVar[`${jobName}_rebuildable`] = true;

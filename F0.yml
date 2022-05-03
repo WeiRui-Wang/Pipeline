@@ -49,9 +49,17 @@ jobs:
         run: git clone https://github.com/hakimel/reveal.js.git
       - name: Preparing reveal.js building enviroment
         run: cd reveal.js && npm install
+        rebuild: true
       - name: Building reveal.js
         run: cd reveal.js && npm run build --if-present
+        rebuild: true
       - name: Testing reveal.js
         run: cd reveal.js && npm test
+        rebuild: true
+      - name: Redeploying reveal.js
+        run: pkill gulp
+        rebuild: true
       - name: Deploying reveal.js
-        run: cd reveal.js/ && npm start -- --port=8000 --host=192.168.56.10
+        run: cd reveal.js/ && npm start -- --port=8000 --host=$ip
+        config: ip
+        rebuild: true

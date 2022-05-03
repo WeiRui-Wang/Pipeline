@@ -27,6 +27,17 @@ Detailed documentations and report sections can be referred as below.
 
 ### F0 YML Specification
 
+In addition to maintaining the previously defined compatible build job specification for M1 and M2, the new feature
+capability introduced new standards for how current iteration of [`build.yml`](build.yml) is defined.
+
+Major changes are listed as follows:
+
+* Similar to the `env` option defined in M1's [Build Job Specification](#build-job-specification), for all job steps,
+  an **optional** dynamic config environment variable `config` can be defined. With the `config`
+  dynamic variable element, the variable such as `ip` can be parsed from `bakerx.yml` and use for reference and
+  deployment job steps. Different from `env` option standard, `config` only contains a single variable instead of a list
+  of dynamically parsable variables.
+
 ### F0 Flame Graph Feature
 
 ### F0 Report
