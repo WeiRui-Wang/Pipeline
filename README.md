@@ -12,14 +12,18 @@
 
 ### F0 Overview
 
-F0 will utilize and further extends pipeline capabilities from M1 and M2 milestone to facilitate the building, testing and the deployment of 2 two different open source projects [reveal.js](https://github.com/hakimel/reveal.js) and [explainshell](https://github.com/idank/explainshell), both with web interface that can demonstrate the successful deployment.
+F0 will utilize and further extends pipeline capabilities from M1 and M2 milestone to facilitate the building, testing
+and the deployment of 2 two different open source projects [reveal.js](https://github.com/hakimel/reveal.js)
+and [explainshell](https://github.com/idank/explainshell), both with web interface that can demonstrate the successful
+deployment.
 
-Additionally, flame graph generation feature will also be added and demonstrated along within one of the pipeline job specification. 
-All previous capability of M1 and M2 were retained and module was expanded based on M2.
+Additionally, flame graph generation feature will also be added and demonstrated along within one of the pipeline job
+specification. All previous capability of M1 and M2 were retained and module was expanded based on M2.
 
-Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process, such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
+Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process,
+such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
 
-Further documentations and report content of F0 were documented as below.
+Detailed documentations and report sections can be referred as below.
 
 ### F0 YML Specification
 
