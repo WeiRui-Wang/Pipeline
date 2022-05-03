@@ -12,7 +12,7 @@
 
 ### F0 Overview
 
-F0 will utilize and further extends pipeline capabilities from [M1](project-m1---pipelines) and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the building, testing
+F0 will utilize and further extends pipeline capabilities from [M1](#project-m1---pipelines) and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the building, testing
 and the deployment of 2 two different open source projects [reveal.js](https://github.com/hakimel/reveal.js)
 and [explainshell](https://github.com/idank/explainshell), both with web interface that can demonstrate the successful
 deployment.
