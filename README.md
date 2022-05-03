@@ -12,8 +12,9 @@
 
 ### F0 Overview
 
-F0 will utilize and further extends pipeline capabilities from [M1](#project-m1---pipelines) and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the building, testing
-and the deployment of 2 two different open source projects [reveal.js](https://github.com/hakimel/reveal.js)
+F0 will utilize and further extends pipeline capabilities from [M1](#project-m1---pipelines)
+and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the building, testing and the deployment of 2
+two different open source projects [reveal.js](https://github.com/hakimel/reveal.js)
 and [explainshell](https://github.com/idank/explainshell), both with web interface that can demonstrate the successful
 deployment.
 
@@ -37,6 +38,11 @@ Major changes are listed as follows:
   dynamic variable element, the variable such as `ip` can be parsed from `bakerx.yml` and use for reference and
   deployment job steps. Different from `env` option standard, `config` only contains a single variable instead of a list
   of dynamically parsable variables.
+* A mandatory boolean flag option `deploy` were also added to the build job specification to indicate the steps that
+  will be used for deployments with `deploy` module. _Note: `deploy` option is neither mandatory nor supported
+  in `build`
+  module. `deploy` and `rebuild` flag are mutually exclusive and for `deploy` to work properly the `deploy` should be
+  the only presence._
 
 ### F0 Flame Graph Feature
 

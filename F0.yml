@@ -56,10 +56,7 @@ jobs:
       - name: Testing reveal.js
         run: cd reveal.js && npm test
         rebuild: true
-      - name: Redeploying reveal.js
-        run: pkill gulp
-        rebuild: true
       - name: Deploying reveal.js
-        run: cd reveal.js/ && npm start -- --port=8000 --host=$ip
+        run: npm start -- --port=8000 --host=$ip
         config: ip
-        rebuild: true
+        deploy: true

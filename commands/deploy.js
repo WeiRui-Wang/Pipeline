@@ -7,22 +7,22 @@ const envfile = require('envfile')
 const envFilePath = path.join(path.dirname(require.main.filename), '.env');
 
 
-exports.command = 'build [jobName] [buildYml]';
-exports.desc = 'Build environment for given build job specification in YAML';
+exports.command = 'deploy [jobName] [ymlFile]';
+exports.desc = 'Deploy given job specification in YAML with transport and link deployment strategy';
 exports.builder = yargs => {
     yargs.options({});
 };
 
 
 exports.handler = async argv => {
-    const {jobName, buildYml} = argv;
-    if (!jobName || !buildYml) {
-        console.log(chalk.inverse('parameter(s) missing: build [jobName] [buildYml]'));
+    const {jobName, ymlFile} = argv;
+    if (!jobName || !ymlFile) {
+        console.log(chalk.inverse('parameter(s) missing: deploy [jobName] [ymlFile]'));
         return;
     }
-    console.log(chalk.green(`Building environment for ${jobName} with ${buildYml}...`));
+    console.log(chalk.green(`Deploying for ${jobName} with ${ymlFile}...`));
     let env = await envfile.parseFileSync(envFilePath);
-    const ymlFilePath = path.join(path.dirname(require.main.filename), buildYml);
+    const ymlFilePath = path.join(path.dirname(require.main.filename), ymlFile);
     const envVar = await envfile.parseFileSync(envFilePath);
     let rebuilding = false;
     if (envVar.init != 'true') {
@@ -31,6 +31,9 @@ exports.handler = async argv => {
     }
     if (envVar[`${jobName}_rebuildable`] == 'true') {
         rebuilding = true;
+    } else {
+        console.log(`job has not been built, run ${chalk.inverse('build')} module and follow defined YAML standard in the document to build ${jobName} and rerun ${chalk.inverse('deploy')} module for deployment`);
+        return;
     }
     try {
         const doc = yaml.load(fs.readFileSync(ymlFilePath, 'utf8'));
@@ -79,26 +82,43 @@ exports.handler = async argv => {
                             const configVar = await envfile.parseFileSync(configFilePath);
                             run = run.replaceAll(`$${step['config'].toString()}`, configVar[step['config'].toString()]);
                         }
-                        if (step['rebuild'] != undefined) {
-                            envVar[`rebuildable`] = true;
-                            envVar[`${jobName}_rebuildable`] = true;
-                            fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
-                        }
-                        if (step['deploy'] != undefined) {
+                        if (rebuilding && (step['deploy'] == undefined)) {
                             continue;
                         }
-                        if (rebuilding && (step['rebuild'] == undefined || step['rebuild'] == false)) {
-                            continue;
-                        }
-                        console.log(`Running: ${step['name']}...`);
-                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "${run} 2>&1"`, {stdio: 'inherit'});
-                        console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
+                        // console.log(`Setting up deployment component...`);
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "sudo npm install -g pm2 2>&1"`, {stdio: 'inherit'});
+                        // console.log(`${chalk.inverse('SUCCESS')}: Setting up deployment component\n`);
+                        // console.log(`Setting up deployment pipeline...`);
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "rm -rf ~/${jobName}/.git 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git init 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp /bakerx/assets/${jobName}/pre-commit ~/${jobName}/.git/hooks/ 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "chmod +x ~/${jobName}/.git/hooks/pre-commit 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git config --local user.name "~" 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git config --local user.email "~" 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git add . 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git commit -am "~" 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "sudo rm -rf /srv/production.git /srv/production-www 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "sudo mkdir -p /srv/production.git /srv/production-www 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "sudo chown vagrant:vagrant -R /srv 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd /srv/production.git && git init --bare 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp /bakerx/assets/${jobName}/post-receive /srv/production.git/hooks/ 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "chmod +x /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo '' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo 'pm2 stop all' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
+                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo 'pm2 start \"${run}\"' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo 'exit 0' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git remote add prod /srv/production.git 2>&1"`, {stdio: 'inherit'});
+                        // console.log(`${chalk.inverse('SUCCESS')}: Setting up deployment pipeline\n`);
+                        // console.log(`Running: ${step['name']}...`);
+                        // await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git push prod master -f 2>&1"`, {stdio: 'inherit'});
+                        // console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
                     } catch (e) {
                         if (!rebuilding && !envVar[`${jobName}_rebuildable`]) {
                             envVar.init = false;
                             fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
                         }
                         console.log(`${chalk.inverse('FAILURE')}: ${step['name']}\n`);
+                        console.log(`Please ensure ${jobName} asset folder exist and both 'pre-commit' and 'post-receive' files are available.\n`);
                         break;
                     }
                 }
@@ -127,7 +147,7 @@ exports.handler = async argv => {
                             } catch (e) {
                                 envVar.init = false;
                                 fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
-                                console.log(chalk.inverse(`please ensure steps and mutation components identified from '${jobName}' of ${buildYml} are present and valid`));
+                                console.log(chalk.inverse(`please ensure steps and mutation components identified from '${jobName}' of ${ymlFile} are present and valid`));
                                 return;
                             }
                             require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ${item['mutation']['microservice']}/ && node index.js"`);
@@ -185,6 +205,6 @@ exports.handler = async argv => {
         }
         throw ``;
     } catch (e) {
-        console.log(chalk.inverse(`please ensure all external resources '${buildYml}', '${ymlFilePath}' or build job '${jobName}' exists and valid`));
+        console.log(chalk.inverse(`please ensure all external resources '${ymlFile}', '${ymlFilePath}' or job specification '${jobName}' exists and valid`));
     }
 };

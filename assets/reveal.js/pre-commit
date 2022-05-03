@@ -1,0 +1,10 @@
+#!/bin/bash
+
+npm install
+# Get the exit code of tests.
+if npm test; then
+  echo "Passed tests! Commit ✅ allowed!"
+  exit 0
+fi
+echo "Failed npm tests. Canceling 🚫 commit!"
+exit 1
