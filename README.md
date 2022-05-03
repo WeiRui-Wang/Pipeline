@@ -50,8 +50,9 @@ Major changes are listed as follows:
 For defined yml, `deploy` option is neither mandatory nor supported in `build` module. `deploy` and `rebuild` flag are
 mutually exclusive and for `deploy` to work properly the `deploy` should be the only presence.
 
-Before running `deploy` module, ensure corresponding `post-receive` and `pre-commit` assets are presented
-in [assets](/assets) root folder under the name of the job name folder.
+Since deployment strategy that used by the `deploy` module is a transport and link deployment, before running `deploy`
+module, ensure corresponding `post-receive` and `pre-commit` assets are presented in [assets](/assets) root folder under
+the name of the job name folder structure such as [reveal.js](/assets/reveal.js) folder.
 
 ### F0 `.env` File Format
 
