@@ -95,6 +95,20 @@ Furthermore, multiple edge case check is in place to enable dynamic checking and
 
 ### F0 `.env` File Format
 
+As defined in [M2 `.env` File Format](#m2-env-file-format) and M1's [`.env` File Format](#env-file-format) section, setup process are described as below for `.env` file. For F0, neither automatic tracking nor manually setup env variables were added. Additionally, [`.env.template`](.env.template) are also provided from M1's template as a way to maintain compatiablity of previously avalaible features as quoted below for quick reference and setup.
+
+```
+Setup:
+
+1. Create a .env file accessible to the repo based
+   on [`.env.template`](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/blob/main/.env.template)
+2. Generate and update with a
+   personal [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+3. Include and update password for MYSQL
+
+```
+
 ### F0 Screencast
 
 ___
