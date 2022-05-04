@@ -88,8 +88,10 @@ graph generation feature to work. Further details can be found in the new build 
 for [F0 Jobs Specifications](#f0-yml-specification).
 
 An output file similar to the flame graph as shown in screenshot below can also be view
-at [/assets/_flamegraph.svg](assets/_flamegraph.svg). Furthermore, F0 screencast will also include the showcase of the
+at [/assets/_flamegraph.svg](assets/_flamegraph.svg). Furthermore, [F0 Screencast](#f0-screencast) will also include the showcase of the
 flame graph generation output in real time.
+
+![image](https://media.github.ncsu.edu/user/19024/files/1452ead2-47f5-4d59-b77b-fbe8acd4e6e3)
 
 ### F0 Pipeline Design
 
