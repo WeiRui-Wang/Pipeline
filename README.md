@@ -14,12 +14,13 @@
 
 F0 will utilize and further extends pipeline capabilities from [M1](#project-m1---pipelines)
 and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the building, testing and the deployment of 2
-two different open source projects [reveal.js](https://github.com/hakimel/reveal.js)
-and [dice-on-demand](https://github.com/srujandeshpande/dice-on-demand), both with web interface that can demonstrate
-the successful deployment.
+two different open source projects with different technology stack of node.js
+based [reveal.js](https://github.com/hakimel/reveal.js)
+and python based [dice-on-demand](https://github.com/srujandeshpande/dice-on-demand), both with web interface that can
+demonstrate the successful deployment.
 
 Additionally, flame graph generation feature will also be added and demonstrated along within one of the pipeline job
-specification. All previous capability of M1 and M2 were retained and module was expanded based on M2.
+specification. All previous capability of M1 and M2 were retained and module was expanded from M2 iteration.
 
 Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process,
 such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
@@ -39,7 +40,9 @@ Major changes are listed as follows:
   deployment job steps. Different from `env` option standard, `config` only contains a single variable instead of a list
   of dynamically parsable variables.
 * A mandatory boolean flag option `deploy` were also added to the yml job specification to indicate the steps that will
-  be used for deployments with `deploy` module only.
+  be used for deployments with `deploy` stage of the pipeline module only.
+* A mandatory boolean flag option `test` were also added to the yml job specification to indicate the steps that will be
+  used for testing with `test` stage of hte pipeline module only.
 
 ### F0 Flame Graph Feature
 
@@ -57,6 +60,9 @@ the name of the job name folder structure such as [reveal.js](/assets/reveal.js)
 ### F0 `.env` File Format
 
 ### F0 Screencast
+
+___
+_Note: documentation sections below are from previous iteration of documentations of both M1 and M2 for reference._
 
 # Project M2 - Pipeline: Test & Analysis
 

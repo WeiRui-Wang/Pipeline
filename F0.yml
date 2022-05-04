@@ -44,6 +44,9 @@ setup:
     - xdg-utils
     - python3-pip
     - python3-flask
+    - linux-tools-common
+    - linux-tools-generic
+    - linux-tools-5.4.0-99-generic
 jobs:
   - name: reveal.js
     steps:
@@ -57,7 +60,11 @@ jobs:
         rebuild: true
       - name: Testing reveal.js
         run: cd reveal.js && npm test
-        rebuild: true
+        test: true
+        flamegraph:
+          hertz: 99
+          delay: 9
+          filename: _flamegraph
       - name: Deploying reveal.js
         run: npm start -- --port=8000 --host=$ip
         config: ip
@@ -71,7 +78,7 @@ jobs:
         rebuild: true
       - name: Testing dice-on-demand
         run: cd dice-on-demand && python3 -m pytest -v
-        rebuild: true
+        test: true
       - name: Deploying dice-on-demand
         run: flask run -h $ip
         config: ip

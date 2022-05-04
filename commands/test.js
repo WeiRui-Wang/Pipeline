@@ -7,22 +7,22 @@ const envfile = require('envfile')
 const envFilePath = path.join(path.dirname(require.main.filename), '.env');
 
 
-exports.command = 'build [jobName] [buildYml]';
-exports.desc = 'Build environment for given build job specification in YAML';
+exports.command = 'test [jobName] [ymlFile]';
+exports.desc = 'Test given job specification in YAML';
 exports.builder = yargs => {
     yargs.options({});
 };
 
 
 exports.handler = async argv => {
-    const {jobName, buildYml} = argv;
-    if (!jobName || !buildYml) {
-        console.log(chalk.inverse('parameter(s) missing: build [jobName] [buildYml]'));
+    const {jobName, ymlFile} = argv;
+    if (!jobName || !ymlFile) {
+        console.log(chalk.inverse('parameter(s) missing: test [jobName] [ymlFile]'));
         return;
     }
-    console.log(chalk.green(`Building environment for ${jobName} with ${buildYml}...`));
+    console.log(chalk.green(`Testing for ${jobName} with ${ymlFile}...`));
     let env = await envfile.parseFileSync(envFilePath);
-    const ymlFilePath = path.join(path.dirname(require.main.filename), buildYml);
+    const ymlFilePath = path.join(path.dirname(require.main.filename), ymlFile);
     const envVar = await envfile.parseFileSync(envFilePath);
     let rebuilding = false;
     if (envVar.init != 'true') {
@@ -31,6 +31,9 @@ exports.handler = async argv => {
     }
     if (envVar[`${jobName}_rebuildable`] == 'true') {
         rebuilding = true;
+    } else {
+        console.log(`job has not been built, run ${chalk.inverse('build')} module and follow defined YAML standard in the document to build ${jobName} and rerun ${chalk.inverse('test')} module for testing`);
+        return;
     }
     try {
         const doc = yaml.load(fs.readFileSync(ymlFilePath, 'utf8'));
@@ -79,20 +82,39 @@ exports.handler = async argv => {
                             const configVar = await envfile.parseFileSync(configFilePath);
                             run = run.replaceAll(`$${step['config'].toString()}`, configVar[step['config'].toString()]);
                         }
-                        if (step['rebuild'] != undefined) {
-                            envVar[`rebuildable`] = true;
-                            envVar[`${jobName}_rebuildable`] = true;
-                            fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
-                        }
-                        if (step['deploy'] != undefined || step['test'] != undefined) {
+                        if (rebuilding && (step['test'] == undefined)) {
                             continue;
                         }
-                        if (rebuilding && (step['rebuild'] == undefined || step['rebuild'] == false)) {
-                            continue;
+                        if (step['flamegraph'] != undefined) {
+                            console.log(`Setting up flame graph component...`);
+                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "rm -rf ~/FlameGraph/ 2>&1"`, {stdio: 'inherit'});
+                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "git clone https://github.com/brendangregg/FlameGraph 2>&1"`, {stdio: 'inherit'});
+                            console.log(`${chalk.inverse('SUCCESS')}: Setting up testing component\n`);
+                            try {
+                                console.log(`Checking flame graph configuration...`);
+                                step['flamegraph']['hertz'].length;
+                                step['flamegraph']['delay'].length;
+                                step['flamegraph']['filename'].length;
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "mkdir -p ~/assets 2>&1"`, {stdio: 'inherit'});
+                                console.log(`Collecting flame graph perf data...`);
+                                require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "sudo perf record -F ${step['flamegraph']['hertz']} -a -g -o ${step['flamegraph']['filename']}.out -- sleep ${step['flamegraph']['delay']}"`);
+                                console.log(`Running: ${step['name']}...`);
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "${run} 2>&1"`, {stdio: 'inherit'});
+                                console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
+                                console.log(`Generating flame graph...`);
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "sudo chown vagrant:vagrant ${step['flamegraph']['filename']}.out 2>&1"`, {stdio: 'inherit'});
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "perf script -i ${step['flamegraph']['filename']}.out | ~/FlameGraph/stackcollapse-perf.pl > ${step['flamegraph']['filename']}.perf-folded 2>&1"`, {stdio: 'inherit'});
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "~/FlameGraph/flamegraph.pl ${step['flamegraph']['filename']}.perf-folded > ~/assets/${step['flamegraph']['filename']}.svg 2>&1"`, {stdio: 'inherit'});
+                                await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp -fr assets/ /bakerx/ 2>&1"`, {stdio: 'inherit'});
+                                console.log(`${chalk.inverse('SUCCESS')}: flame graph saved in both root of host and home of VM as /assets/${step['flamegraph']['filename']}.svg\n`);
+                            } catch (e) {
+                                console.log(`${chalk.inverse('FAILURE')}: invalid flame graph parameter or configuration defined in YAML\n`);
+                            }
+                        } else {
+                            console.log(`Running: ${step['name']}...`);
+                            await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "${run} 2>&1"`, {stdio: 'inherit'});
+                            console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
                         }
-                        console.log(`Running: ${step['name']}...`);
-                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "${run} 2>&1"`, {stdio: 'inherit'});
-                        console.log(`${chalk.inverse('SUCCESS')}: ${step['name']}\n`);
                     } catch (e) {
                         if (!rebuilding && !envVar[`${jobName}_rebuildable`]) {
                             envVar.init = false;
@@ -127,7 +149,7 @@ exports.handler = async argv => {
                             } catch (e) {
                                 envVar.init = false;
                                 fs.writeFileSync(envFilePath, envfile.stringifySync(envVar));
-                                console.log(chalk.inverse(`please ensure steps and mutation components identified from '${jobName}' of ${buildYml} are present and valid`));
+                                console.log(chalk.inverse(`please ensure steps and mutation components identified from '${jobName}' of ${ymlFile} are present and valid`));
                                 return;
                             }
                             require('child_process').exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ${item['mutation']['microservice']}/ && node index.js"`);
@@ -185,6 +207,6 @@ exports.handler = async argv => {
         }
         throw ``;
     } catch (e) {
-        console.log(chalk.inverse(`please ensure all external resources '${buildYml}', '${ymlFilePath}' or build job '${jobName}' exists and valid`));
+        console.log(chalk.inverse(`please ensure all external resources '${ymlFile}', '${ymlFilePath}' or job specification '${jobName}' exists and valid`));
     }
 };
