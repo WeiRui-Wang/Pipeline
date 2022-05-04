@@ -5,7 +5,7 @@
 - [F0 Overview](#f0-overview)
 - [F0 YML Specification](#f0-yml-specification)
 - [F0 Flame Graph Feature](#f0-flame-graph-feature)
-- [F0 Report](#f0-report)
+- [F0 Pipeline Design](#f0-pipeline-design)
 - [F0 Commands](#f0-commands)
 - [F0 `.env` File Format](#f0-env-file-format)
 - [F0 Screencast](#f0-screencast)
@@ -19,8 +19,8 @@ based [reveal.js](https://github.com/hakimel/reveal.js)
 and python based [dice-on-demand](https://github.com/srujandeshpande/dice-on-demand), both with web interface that can
 demonstrate the successful deployment.
 
-Additionally, flame graph generation feature will also be added and demonstrated along within one of the pipeline job
-specification. All previous capability of M1 and M2 were retained and module was expanded from M2 iteration.
+Additionally, [flame graph generation](#f0-flame-graph-feature) will also be added and demonstrated along within one of the pipeline job
+specification. All previous capability of M1 and M2 were retained and module was expanded from M2's iteration of implementations.
 
 Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process,
 such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
@@ -46,7 +46,7 @@ Major changes are listed as follows:
 
 ### F0 Flame Graph Feature
 
-### F0 Report
+### F0 Pipeline Design
 
 ### F0 Commands
 
