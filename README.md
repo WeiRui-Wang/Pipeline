@@ -29,7 +29,8 @@ in [F0 YML Specification](#f0-yml-specification).
 Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process,
 such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
 
-Detailed documentations and report sections can be referred as below. The screencast can be quickly navigated in [F0 Screencast](#f0-screencast).
+Detailed documentations and report sections can be referred as below. The screencast for F0 can be quickly navigated
+in [F0 Screencast](#f0-screencast).
 
 ### F0 YML Specification
 
@@ -87,9 +88,9 @@ Additionally, the section of `flamegraph` along with **mandatory** configuration
 graph generation feature to work. Further details can be found in the new build job specification standard
 for [F0 Jobs Specifications](#f0-yml-specification).
 
-An output file similar to the flame graph as shown in screenshot below can also be view
-at [/assets/_flamegraph.svg](assets/_flamegraph.svg). Furthermore, [F0 Screencast](#f0-screencast) will also include the showcase of the
-flame graph generation output in real time.
+An output file with the current defined configurations from yml for the flame graph as shown in screenshot below can
+also be view at [/assets/_flamegraph.svg](assets/_flamegraph.svg). Furthermore, [F0 Screencast](#f0-screencast) will
+also include the showcase of the flame graph generation output in real time.
 
 ![image](https://media.github.ncsu.edu/user/19024/files/1452ead2-47f5-4d59-b77b-fbe8acd4e6e3)
 
@@ -138,8 +139,8 @@ node index.js deploy dice-on-demand F0.yml
 ```
 
 Overall, above commands are supported and can be used to run all the pipeline features as defined. With the basic setup
-commands on host such as `npm install` and `npm link`, the sequence of `build`, `test`, and `deploy` can be interchange,
-however it is worth-noting that `build` must be run before either `test` or `deploy` run.
+commands on host such as `npm install`, `npm link` and `init`, the sequence of `build`, `test`, and `deploy` can be
+interchange, however it is worth-noting that `build` must be run before either `test` or `deploy` run.
 
 Furthermore, multiple edge case check is in place to enable dynamic checking and ensure the integrity of the environment
 and validity of the process logic flow as implemented in the pipeline modules.
@@ -159,6 +160,8 @@ Setup:
 ```
 
 ### F0 Screencast
+
+[F0-wnwang Screencast]()
 
 ___
 _Note: documentation sections below are from previous iteration of documentations of both M1 and M2 for reference._
