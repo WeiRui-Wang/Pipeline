@@ -63,8 +63,6 @@ Since deployment strategy that used by the `deploy` module is a transport and li
 module, ensure corresponding `post-receive` and `pre-commit` assets are presented in [assets](/assets) root folder under
 the name of the job name folder structure such as [reveal.js](/assets/reveal.js) folder.
 
-
-
 ```
 npm install
 npm link
@@ -88,7 +86,6 @@ node index.js test dice-on-demand F0.yml
 node index.js deploy dice-on-demand F0.yml
 ```
 
-
 Overall, above commands are supported and can be used to run all the pipeline features as defined . Besides the basic setup commands such as `npm install` and `npm link`, the sequence of `build`, `test`, and `deploy` can be interchange, however it is worth-noting that `build` must be run before either `test` or `deploy` run.
 
 Furthermore, multiple edge case check is in place to enable dynamic checking and ensure the integrity of the enviroment and validity of the process logic flow as implemented in the pipeline modules.
@@ -99,14 +96,9 @@ As defined in [M2 `.env` File Format](#m2-env-file-format) and M1's [`.env` File
 
 ```
 Setup:
-
-1. Create a .env file accessible to the repo based
-   on [`.env.template`](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/blob/main/.env.template)
-2. Generate and update with a
-   personal [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-
-3. Include and update password for MYSQL
-
+1. Create a .env file accessible to the repo based on `.env.template`
+2. Generate and update with a personal [access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+3. Include and update password as defined as MYSQL from `.env.template`
 ```
 
 ### F0 Screencast
