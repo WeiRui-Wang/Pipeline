@@ -48,6 +48,12 @@ Major changes are listed as follows:
 
 ### F0 Pipeline Design
 
+For the deployment of the pipeline, F0 implemented a transport and link deployment strategy. The pipeline design are shown as below. 
+
+![image](https://media.github.ncsu.edu/user/19024/files/ebd7fe5a-9ca6-45d9-ab01-9fd958b06d7a)
+
+All components that will be using during the deploy process for the defined tasks as defined in jobs specification are also included as related details and can be found in [F0 Commands](#f0-commands).
+
 ### F0 Commands
 
 For defined yml, `deploy` option is neither mandatory nor supported in `build` module. `deploy` and `rebuild` flag are
@@ -56,6 +62,36 @@ mutually exclusive and for `deploy` to work properly the `deploy` should be the 
 Since deployment strategy that used by the `deploy` module is a transport and link deployment, before running `deploy`
 module, ensure corresponding `post-receive` and `pre-commit` assets are presented in [assets](/assets) root folder under
 the name of the job name folder structure such as [reveal.js](/assets/reveal.js) folder.
+
+
+
+```
+npm install
+npm link
+pipeline init
+pipeline build dice-on-demand F0.yml
+pipeline build reveal.js F0.yml
+pipeline test dice-on-demand F0.yml
+pipeline test reveal.js F0.yml
+pipeline deploy dice-on-demand F0.yml
+pipeline deploy reveal.js F0.yml
+```
+As an alternative, following commands are also available.
+```
+npm install
+node index.js init
+node index.js build reveal.js F0.yml
+node index.js test reveal.js F0.yml
+node index.js deploy reveal.js F0.yml
+node index.js build dice-on-demand F0.yml
+node index.js test dice-on-demand F0.yml
+node index.js deploy dice-on-demand F0.yml
+```
+
+
+Overall, above commands are supported and can be used to run all the pipeline features as defined . Besides the basic setup commands such as `npm install` and `npm link`, the sequence of `build`, `test`, and `deploy` can be interchange, however it is worth-noting that `build` must be run before either `test` or `deploy` run.
+
+Furthermore, multiple edge case check is in place to enable dynamic checking and ensure the integrity of the enviroment and validity of the process logic flow as implemented in the pipeline modules.
 
 ### F0 `.env` File Format
 
