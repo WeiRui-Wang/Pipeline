@@ -15,8 +15,8 @@
 F0 will utilize and further extends pipeline capabilities from [M1](#project-m1---pipelines)
 and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the building, testing and the deployment of 2
 two different open source projects [reveal.js](https://github.com/hakimel/reveal.js)
-and [explainshell](https://github.com/idank/explainshell), both with web interface that can demonstrate the successful
-deployment.
+and [dice-on-demand](https://github.com/srujandeshpande/dice-on-demand), both with web interface that can demonstrate
+the successful deployment.
 
 Additionally, flame graph generation feature will also be added and demonstrated along within one of the pipeline job
 specification. All previous capability of M1 and M2 were retained and module was expanded based on M2.

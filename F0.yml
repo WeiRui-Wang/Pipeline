@@ -42,6 +42,8 @@ setup:
     - libnss3
     - lsb-release
     - xdg-utils
+    - python3-pip
+    - python3-flask
 jobs:
   - name: reveal.js
     steps:
@@ -58,5 +60,19 @@ jobs:
         rebuild: true
       - name: Deploying reveal.js
         run: npm start -- --port=8000 --host=$ip
+        config: ip
+        deploy: true
+  - name: dice-on-demand
+    steps:
+      - name: Preparing dice-on-demand repository
+        run: git clone https://github.com/srujandeshpande/dice-on-demand.git
+      - name: Building dice-on-demand
+        run: cd dice-on-demand && pip install -r requirements.txt
+        rebuild: true
+      - name: Testing dice-on-demand
+        run: cd dice-on-demand && python3 -m pytest -v
+        rebuild: true
+      - name: Deploying dice-on-demand
+        run: flask run -h $ip
         config: ip
         deploy: true
