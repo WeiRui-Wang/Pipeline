@@ -29,7 +29,7 @@ in [F0 YML Specification](#f0-yml-specification).
 Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process,
 such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
 
-Detailed documentations and report sections can be referred as below.
+Detailed documentations and report sections can be referred as below. The screencast can be quickly navigated in [F0 Screencast](#f0-screencast).
 
 ### F0 YML Specification
 
