@@ -19,8 +19,12 @@ based [reveal.js](https://github.com/hakimel/reveal.js)
 and python based [dice-on-demand](https://github.com/srujandeshpande/dice-on-demand), both with web interface that can
 demonstrate the successful deployment.
 
-Additionally, [flame graph generation](#f0-flame-graph-feature) will also be added and demonstrated along within one of the pipeline job
-specification. All previous capability of M1 and M2 were retained and module was expanded from M2's iteration of implementations.
+Additionally, [flame graph generation](#f0-flame-graph-feature) will also be added and demonstrated along within one of
+the pipeline job specification. All previous capability of M1 and M2 were retained and module was expanded from M2's
+iteration of implementations.
+
+Along with the new features introduced, new feature for F0 were also added and documented
+in [F0 YML Specification](#f0-yml-specification).
 
 Further adaptation and modification was in place to ensure capability of multi-stage pipeline across deployment process,
 such that pipeline now supports the building, testing, and deployment for all jobs with categorized steps.
@@ -39,20 +43,63 @@ Major changes are listed as follows:
   dynamic variable element, the variable such as `ip` can be parsed from `bakerx.yml` and use for reference and
   deployment job steps. Different from `env` option standard, `config` only contains a single variable instead of a list
   of dynamically parsable variables.
-* A mandatory boolean flag option `deploy` were also added to the yml job specification to indicate the steps that will
-  be used for deployments with `deploy` stage of the pipeline module only.
-* A mandatory boolean flag option `test` were also added to the yml job specification to indicate the steps that will be
-  used for testing with `test` stage of hte pipeline module only.
+* A boolean flag option `deploy` were also added to the yml job specification to indicate the steps that will be used
+  for deployments with `deploy` stage of the pipeline module only.
+* A boolean flag option `test` were also added to the yml job specification to indicate the steps that will be used for
+  testing with `test` stage of the pipeline module only.
+* An **optional** parsable `flamegraph` option were also added as part of the step with `test` flag option to be`true`
+  to facilitate the configurations of the [flame graph feature](#f0-flame-graph-feature). When `flamegraph` is in used,
+  the parameters of `hertz` in integer, `delay` in integer, and `filename` in string must be defined as example provided
+  below.
+    * `hertz` in integer, is the frequency in hertz that will be used for `perf` record collection.
+    * `delay` in integer, is the time length in second that will be used for the timeframe delay used to collect
+      the `perf` record.
+    * `filename`: in string, is the file name that will be both saved and transfer to the [assets directory](/assets).
+
+```yaml
+jobs:
+  - name: reveal.js
+    steps:
+...
+- name: Testing reveal.js
+  run: cd reveal.js && npm test
+  test: true
+  flamegraph:
+    hertz: 99
+    delay: 9
+    filename: _flamegraph
+...
+```
+
+Further details and example output of [flame graph feature](#f0-flame-graph-feature) can be found in the following
+section.
 
 ### F0 Flame Graph Feature
 
+In additional to the deployment pipeline, within F0, flame graph generation feature was also added to the pipeline
+utility. For F0 iteration, the flame graph generation configurations can be defined in YAML to enable the feature as
+mentioned from previous section.
+
+Since the pipeline stage were modulated into `build`, `test`, and `deploy` step, the current frame graph generation can
+support the generation when the step of job specification defined when the flag `test` set the `true`.
+
+Additionally, the section of `flamegraph` along with **mandatory** configuration parameters is necessary for the flame
+graph generation feature to work. Further details can be found in the new build job specification standard
+for [F0 Jobs Specifications](#f0-yml-specification).
+
+An output file similar to the flame graph as shown in screenshot below can also be view
+at [/assets/_flamegraph.svg](assets/_flamegraph.svg). Furthermore, F0 screencast will also include the showcase of the
+flame graph generation output in real time.
+
 ### F0 Pipeline Design
 
-For the deployment of the pipeline, F0 implemented a transport and link deployment strategy. The pipeline design are shown as below. 
+For the deployment of the pipeline, F0 implemented a transport and link deployment strategy. The pipeline design are
+shown as below.
 
 ![image](https://media.github.ncsu.edu/user/19024/files/ebd7fe5a-9ca6-45d9-ab01-9fd958b06d7a)
 
-All components that will be using during the deploy process for the defined tasks as defined in jobs specification are also included as related details and can be found in [F0 Commands](#f0-commands).
+All components that will be using during the deployment process for the defined tasks as defined in jobs specification
+are also included as related details and can be found in [F0 Commands](#f0-commands).
 
 ### F0 Commands
 
@@ -74,7 +121,9 @@ pipeline test reveal.js F0.yml
 pipeline deploy dice-on-demand F0.yml
 pipeline deploy reveal.js F0.yml
 ```
+
 As an alternative, following commands are also available.
+
 ```
 npm install
 node index.js init
@@ -86,13 +135,19 @@ node index.js test dice-on-demand F0.yml
 node index.js deploy dice-on-demand F0.yml
 ```
 
-Overall, above commands are supported and can be used to run all the pipeline features as defined . Besides the basic setup commands such as `npm install` and `npm link`, the sequence of `build`, `test`, and `deploy` can be interchange, however it is worth-noting that `build` must be run before either `test` or `deploy` run.
+Overall, above commands are supported and can be used to run all the pipeline features as defined. With the basic setup
+commands on host such as `npm install` and `npm link`, the sequence of `build`, `test`, and `deploy` can be interchange,
+however it is worth-noting that `build` must be run before either `test` or `deploy` run.
 
-Furthermore, multiple edge case check is in place to enable dynamic checking and ensure the integrity of the enviroment and validity of the process logic flow as implemented in the pipeline modules.
+Furthermore, multiple edge case check is in place to enable dynamic checking and ensure the integrity of the environment
+and validity of the process logic flow as implemented in the pipeline modules.
 
 ### F0 `.env` File Format
 
-As defined in [M2 `.env` File Format](#m2-env-file-format) and M1's [`.env` File Format](#env-file-format) section, setup process are described as below for `.env` file. For F0, neither automatic tracking nor manually setup env variables were added. Additionally, [`.env.template`](.env.template) are also provided from M1's template as a way to maintain compatiablity of previously avalaible features as quoted below for quick reference and setup.
+As defined in [M2 `.env` File Format](#m2-env-file-format) and M1's [`.env` File Format](#env-file-format) section,
+setup process are described as below for `.env` file. For F0, neither automatic tracking nor manually setup env
+variables were added. Additionally, [`.env.template`](.env.template) are also provided from M1's template as a way to
+maintain compatibility of previously available features as quoted below for quick reference and setup.
 
 ```
 Setup:
@@ -202,7 +257,7 @@ mutation is randomly picked within `mutation`:
 
 #### Test Hardness
 
-The test hardness implemented allos for
+The test hardness implemented allows for
 
 * Start with original version of markdown
 * Apply a random mutation operator
@@ -225,7 +280,7 @@ The mutation coverage is calculated by: failed cases per mutation / total number
 | Updating the build.yml file                                             | Considered what information had to be added or updated to the build.yml file from M1 to work with M2 related work                                                                                                                     | updated build.yml to include mutation-coverage job with steps to clone and install microservice, prepare and install components for the mutation driver and provide specific information for the mutation itself with the renderer, driver, iterations and markdown files to be tested.                                                                                                                                                                                                                                                                      |
 | Implementing mutations                                                  | Determine what mutations had to be implemented, where to call them within the host machine and how to apply them to the files being tested                                                                                            | `mutation` was implemented to account for all the different types of mutations expected (as listed in mutation operators), a total of 1000 mutations are applied. One mutation out of all the available ones is randomly applied to the file being tested.                                                                                                                                                                                                                                                                                                   |
 | Test harness                                                            | The final test required that the mutations are applied, recognized and tracked. A final mutation coverage had to be calculated at the end such as mutation coverage = (any test case fails for mutant ) / (total number of mutations) | Implementation required for all the previous components had to be completed and working properly. Various runtime errors developed which made it hard to determine what was considered a failed mutation vs issues with runtime. A try-catch approach was implemented to filter out the cases considered as failed test cases due to mutation or other issues related to runtime.                                                                                                                                                                            |
-| Repo restructuring & Debugging                                          | Various issues developed while trying to incoorporate all the new components to the original structure of M1. There were issues trying to automate the proccess of mutation, screenshot and comparison.                               | Issue descriptions can be found in issue [#32](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/issues/32), the issues were investigated and handled. To integrate the new components for M2, a drivers folder had to be added which included files MC, mutation, and parser which all handle the mutations.                                                                                                                                                                                                                                                 |
+| Repo restructuring & Debugging                                          | Various issues developed while trying to incorporate all the new components to the original structure of M1. There were issues trying to automate the process of mutation, screenshot and comparison.                                 | Issue descriptions can be found in issue [#32](https://github.ncsu.edu/CSC-DevOps-S22/DEVOPS-23/issues/32), the issues were investigated and handled. To integrate the new components for M2, a drivers folder had to be added which included files MC, mutation, and parser which all handle the mutations.                                                                                                                                                                                                                                                 |
 
 ### M2 Commands
 
@@ -236,7 +291,7 @@ Additionally, further details can be found in [M2 `.env` File Format](#m2-env-fi
 
 To run the commands and test the module, use Windows with seted up Git Bash.
 
-All mutation comparable rendered results are save locally automatically in `.mutations` local folder which within the
+All mutation comparable rendered results are saved locally automatically in `.mutations` local folder which within the
 same directory of the local repository. An example of 1000 mutations of all 4 snapshots comparable output in zip file
 can be found in [_mutations.zip](assets/_mutations.zip).
 
@@ -263,7 +318,7 @@ M1 features and compatible commands.
 ### M2 `.env` File Format
 
 For M2, M1-based standard [`.env` File Format](#env-file-format) as describe in M1 documentation is still applicable.
-Additionally, `build.js` modules has adapted new changes that is automatic for environment tracking.
+Additionally, `build.js` modules has adapted new changes that are automatic for environment tracking.
 
 ### M2 Screencast
 
@@ -287,17 +342,17 @@ Provision and run tasks inside a computing environment from a host machine by de
 ### Build Job Specification
 
 + Our parser for YAML build job specification supports the formatting as shown below.
-+ `setup` consists a list of enviroment setup commands and packages to be installed before the job execution.
++ `setup` consists a list of environment setup commands and packages to be installed before the job execution.
 + `jobs` consists of list of jobs will be run after `setup`.
 
 
 + Each item in `jobs` must have `name` and `steps`, and `steps` can consists a list of steps that has `name` and `run`
   for each step within `steps` list.
     + Within each `step` item, optional parameters `env` and `rebuild` can be used.
-    + `env` indicate the enviroment variable that should be retrived from the `.env` file as predefined, within yml
+    + `env` indicate the environment variable that should be retrived from the `.env` file as predefined, within yml
       file, optional `env` flag is stored as list as shown in example below.
     + `rebuild` indicate the step that is going to run after the initial build run so that during rebuild, original
-      initial enviroment setup steps can be skipped so it is more dynamic.
+      initial environment setup steps can be skipped so it is more dynamic.
 + Each item from `setup` must be following same level of indentation as shown below, and fall within 3 major general
   format.
     + **APT**: package names under `apt`, each in an individual line.
