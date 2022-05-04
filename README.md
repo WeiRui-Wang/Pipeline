@@ -35,7 +35,7 @@ in [F0 Screencast](#f0-screencast).
 ### F0 YML Specification
 
 In addition to maintaining the previously defined compatible build job specification for M1 and M2, the new feature
-capability introduced new standards for how current iteration of [`build.yml`](build.yml) is defined.
+capability introduced new standards for how current iteration of [`F0.yml`](F0.yml) is defined.
 
 Major changes are listed as follows:
 
