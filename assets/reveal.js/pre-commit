@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
 npm install
-# Get the exit code of tests.
 if npm test; then
   echo "Passed tests! Commit ✅ allowed!"
   exit 0
