@@ -17,7 +17,7 @@ and [M2](#project-m2---pipeline-test--analysis) milestone to facilitate the buil
 two different open source projects with different technology stack of node.js
 based [reveal.js](https://github.com/hakimel/reveal.js)
 and python based [dice-on-demand](https://github.com/srujandeshpande/dice-on-demand), both with web interface that can
-demonstrate the successful deployment. After deployment, [reveal.js interface](192.168.56.10:8000) and [dice-on-demand interface](192.168.56.10:5000) will be available.
+demonstrate the successful deployment. After deployment, [reveal.js interface](http://192.168.56.10:8000/) and [dice-on-demand interface](http://192.168.56.10:5000/) will be accessible.
 
 Additionally, [flame graph generation](#f0-flame-graph-feature) will also be added and demonstrated along within one of
 the pipeline job specification. All previous capability of M1 and M2 were retained and module was expanded from M2's
