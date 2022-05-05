@@ -93,6 +93,7 @@ exports.handler = async argv => {
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git init 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp /bakerx/assets/${jobName}/pre-commit ~/${jobName}/.git/hooks/ 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "chmod +x ~/${jobName}/.git/hooks/pre-commit 2>&1"`, {stdio: 'inherit'});
+                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "dos2unix ~/${jobName}/.git/hooks/pre-commit 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git config --local user.name "~" 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git config --local user.email "~" 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd ~/${jobName}/ && git add . 2>&1"`, {stdio: 'inherit'});
@@ -103,6 +104,7 @@ exports.handler = async argv => {
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cd /srv/production.git && git init --bare 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "cp /bakerx/assets/${jobName}/post-receive /srv/production.git/hooks/ 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "chmod +x /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
+                        await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "dos2unix /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo '' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo 'pm2 stop all' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});
                         await exec(`${env.CONNECTION_INFORMATION} -o UserKnownHostsFile=/dev/null "echo -e 'pm2 start ""${run}""' >> /srv/production.git/hooks/post-receive 2>&1"`, {stdio: 'inherit'});

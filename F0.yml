@@ -4,6 +4,7 @@ setup:
     - wget
     - curl
     - nodejs
+    - dos2unix
     - gconf-service
     - libasound2
     - libatk1.0-0
