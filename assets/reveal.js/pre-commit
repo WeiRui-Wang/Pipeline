@@ -1,0 +1,9 @@
+#!/bin/sh
+
+npm install
+if npm test; then
+  echo "Passed tests! Commit ✅ allowed!"
+  exit 0
+fi
+echo "Failed npm tests. Canceling 🚫 commit!"
+exit 1

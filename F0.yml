@@ -1,0 +1,86 @@
+setup:
+  apt:
+    - npm
+    - wget
+    - curl
+    - nodejs
+    - dos2unix
+    - gconf-service
+    - libasound2
+    - libatk1.0-0
+    - libatk-bridge2.0-0
+    - libc6
+    - libcairo2
+    - libcups2
+    - libdbus-1-3
+    - libexpat1
+    - libfontconfig1
+    - libgcc1
+    - libgconf-2-4
+    - libgdk-pixbuf2.0-0
+    - libglib2.0-0
+    - libgtk-3-0
+    - libnspr4
+    - libpango-1.0-0
+    - libpangocairo-1.0-0
+    - libstdc++6
+    - libx11-6
+    - libx11-xcb1
+    - libxcb1
+    - libxcomposite1
+    - libxcursor1
+    - libxdamage1
+    - libxext6
+    - libxfixes3
+    - libxi6
+    - libxrandr2
+    - libxrender1
+    - libxss1
+    - libxtst6
+    - ca-certificates
+    - fonts-liberation
+    - libappindicator1
+    - libnss3
+    - lsb-release
+    - xdg-utils
+    - python3-pip
+    - python3-flask
+    - linux-tools-common
+    - linux-tools-generic
+    - linux-tools-5.4.0-99-generic
+jobs:
+  - name: reveal.js
+    steps:
+      - name: Preparing reveal.js repository
+        run: git clone https://github.com/hakimel/reveal.js.git
+      - name: Preparing reveal.js building enviroment
+        run: cd reveal.js && npm install
+        rebuild: true
+      - name: Building reveal.js
+        run: cd reveal.js && npm run build --if-present
+        rebuild: true
+      - name: Testing reveal.js
+        run: cd reveal.js && npm test
+        test: true
+        flamegraph:
+          hertz: 99
+          delay: 9
+          filename: _flamegraph
+      - name: Deploying reveal.js
+        run: npm start -- --port=8000 --host=$ip
+        config: ip
+        deploy: true
+  - name: dice-on-demand
+    steps:
+      - name: Preparing dice-on-demand repository
+        run: git clone https://github.com/srujandeshpande/dice-on-demand.git
+      - name: Building dice-on-demand
+        run: cd dice-on-demand && pip install -r requirements.txt
+        rebuild: true
+      - name: Testing dice-on-demand
+        run: cd dice-on-demand && python3 -m pytest -v
+        test: true
+      - name: Deploying dice-on-demand
+        run: flask run -h $ip
+        config: ip
+        deploy: true

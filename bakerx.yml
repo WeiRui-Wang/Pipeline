@@ -1,5 +1,6 @@
-name: M1
+name: F0
 image: focal
+memory: 4096
 ip: 192.168.56.10
 sync: true
 up: |

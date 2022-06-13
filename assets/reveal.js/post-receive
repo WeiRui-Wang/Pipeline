@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "Current location: $GIT_DIR"
+GIT_WORK_TREE=/srv/production-www/ git checkout -f master
+echo "Pushed to production!"
+cd /srv/production-www
+npm install
+npm run build --if-present
