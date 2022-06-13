@@ -1,4 +1,4 @@
-# Pipeline - Build, Test, Analysis, Deployment
+# Pipeline Tool
 
 A dynamic adaptable pipeline tool that powered automation across Build, Test, Analysis, and Deployment stages for Agile DevOps.
 
