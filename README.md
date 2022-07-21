@@ -1,6 +1,6 @@
 # Pipeline Tool
 
-A dynamic adaptable DevOps pipeline tool that powered automation across Build, Test, Analysis, and Deployment stages across Agile lifecycle.
+A dynamic adaptable DevOps pipeline tool that powered automation across Build, Test, Analysis, and Deployment.
 
 ## INDEX
 
